@@ -13,26 +13,11 @@ import manageStore from './store/store.js'
 
 const store = manageStore();
 
-let rootElement = document.getElementById('manage');
+let rootElement = document.getElementById('App');
 render(
     <Provider store = {store}>
         <Router history={hashHistory}>
             <Route path="/" component={App}>
-                <Route path="/bulletin" component={Bulletin}>
-                    <IndexRoute component={BulletinManage}/>
-                    <Route path="/publish" component={BulletinPublish}/>
-                </Route>
-                <Route path="/qrcode" component={QrCodeContent}/>
-                <Route path="/classify" component={Classify}>
-                    <IndexRoute component={ShowClassify}/>
-                    <Route path="/newclassify" component={NewClassify}/>
-                </Route>
-                <Route path="/floorads" component={FloorAds}>
-                    <IndexRoute  component={AdsShow}/>
-                    <Route path="/addadvertisement" component={AddAdver}/>
-                </Route>
-                <Route path="/recommend" component={Recommend}></Route>
-                <Route path="/carousel/upload" component={CarouselUpload}></Route>
                 <IndexRoute component={SliderContent}/>
             </Route>
         </Router>

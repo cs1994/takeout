@@ -1,0 +1,31 @@
+@(title: String,conf: Option[Map[String, String]]=None)(content: Html)
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>@title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+      <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/homePage/main.css")">
+
+  </head>
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.0.0-beta1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+  <script type="text/javascript" src="@routes.Assets.versioned("../../../public/javascripts/common/ajax.js")"></script>
+
+  <body>
+
+
+    <div class="main_content">
+    @content
+    </div>
+  </body>
+</html>

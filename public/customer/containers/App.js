@@ -9,7 +9,6 @@ export default class App extends Component {
     componentDidMount() {
     }
     render() {
-        // Injected by connect() call:
         const { dispatch} = this.props;
         return (
             <div className="indexPage">

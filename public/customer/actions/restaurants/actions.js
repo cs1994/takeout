@@ -4,6 +4,7 @@
 
 //import {url} from '../../javascripts/conf.js'
 export const GET_STORELIST = 'GET_STORELIST';
+
 export const GET_SLIDERLIST = 'GET_SLIDERLIST';
 export const GET_PRODUCTLIST = 'GET_PRODUCTLIST';
 export const GET_FOODLIST = 'GET_FOODLIST';

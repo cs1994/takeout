@@ -19,7 +19,6 @@ export default class App extends Component {
                         dispatch
                     })}
                 </div>
-                <div className="mask"></div>
             </div>
         )
     }

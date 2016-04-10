@@ -5,6 +5,7 @@
 import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 import Modal from '../../../javascripts/common/modal.js'
+import {isEmail,isStrongPassword} from "../../../javascripts/common/function.js"
 /**
  * 餐厅主人列表
  * */
@@ -16,6 +17,8 @@ export default class RestaurantList extends Component{
         super(props);
         this.openModal=this.openModal.bind(this);
         this.onConfirm=this.onConfirm.bind(this);
+        this.checkEmail=this.checkEmail.bind(this);
+        this.onCheckPwd=this.onCheckPwd.bind(this);
     }
     componentWillMount(){
     }
@@ -23,7 +26,36 @@ export default class RestaurantList extends Component{
         this.refs.addStoreUser.open();
     }
     onConfirm(){
+        var email = $('#email').val();
+        var password = $('#password').val();
+        var secondPwd = $('#secondPwd').val();
 
+        if(!isEmail(email)){
+            toastr.warning("邮箱格式不正确");
+            return;
+        }
+
+        if(password != secondPwd){
+            toastr.warning("两次密码输入不一致");
+            return;
+        }else if(!isStrongPassword(password)){
+            toastr.warning("密码格式不正确");
+            return;
+        }
+        var postData = {email: email, password: password};
+        console.log("$$$$ " + JSON.stringify(postData))
+    }
+    checkEmail(){
+        var email = $('#email').val();
+        if(!isEmail(email)){
+            toastr.warning("邮箱格式不正确");
+        }
+    }
+    onCheckPwd(){
+        var pwd = $('#password').val();
+        if(!isStrongPassword(pwd)){
+            toastr.warning("密码格式不正确");
+        }
     }
     render(){
         const {storeUserList} = this.props;
@@ -96,6 +128,34 @@ export default class RestaurantList extends Component{
                     </div>
                 </div>
                 <Modal ref="addStoreUser" title="添加商户" Id="addStoreUser" onConfirm={this.onConfirm}>
+                    <form id="newDishForm">
+                        <fieldset>
+                            <div id="legend" className="">
+                                <legend className="">新建商户</legend>
+                            </div>
+                            <div className="form-group">
+                                <label for="dishName"> 邮箱(必填)</label>
+                                <input type="email" className="form-control" id="email"
+                                       name="email" placeholder="" onBlur={this.checkEmail}/>
+                                <p className="help-block">此邮箱将作为商户登录的邮箱</p>
+
+                            </div>
+                            <div className="form-group">
+                                <label for="dishName"> 密码(必填,强密码)</label>
+                                <input type="password" className="form-control" id="password"
+                                       name="password" placeholder="" onBlur={this.onCheckPwd}/>
+                                <p className="help-block">必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-20之间</p>
+
+                            </div>
+                            <div className="form-group">
+                                <label for="dishName"> 确认密码(必填)</label>
+                                <input type="password" className="form-control" id="secondPwd"
+                                       name="secondPwd" placeholder=""/>
+                                <p className="help-block"></p>
+                            </div>
+                        </fieldset>
+                    </form>
+
                 </Modal>
             </div>
 

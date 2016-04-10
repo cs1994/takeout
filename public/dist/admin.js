@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "825943174fdec73a620e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3cd3f437393e58e1fe7a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12752,6 +12752,8 @@
 
 	var _modal2 = _interopRequireDefault(_modal);
 
+	var _function = __webpack_require__(325);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -12779,6 +12781,8 @@
 
 	        _this.openModal = _this.openModal.bind(_this);
 	        _this.onConfirm = _this.onConfirm.bind(_this);
+	        _this.checkEmail = _this.checkEmail.bind(_this);
+	        _this.onCheckPwd = _this.onCheckPwd.bind(_this);
 	        return _this;
 	    }
 
@@ -12792,7 +12796,42 @@
 	        }
 	    }, {
 	        key: 'onConfirm',
-	        value: function onConfirm() {}
+	        value: function onConfirm() {
+	            var email = $('#email').val();
+	            var password = $('#password').val();
+	            var secondPwd = $('#secondPwd').val();
+
+	            if (!(0, _function.isEmail)(email)) {
+	                toastr.warning("邮箱格式不正确");
+	                return;
+	            }
+
+	            if (password != secondPwd) {
+	                toastr.warning("两次密码输入不一致");
+	                return;
+	            } else if (!(0, _function.isStrongPassword)(password)) {
+	                toastr.warning("密码格式不正确");
+	                return;
+	            }
+	            var postData = { email: email, password: password };
+	            console.log("$$$$ " + JSON.stringify(postData));
+	        }
+	    }, {
+	        key: 'checkEmail',
+	        value: function checkEmail() {
+	            var email = $('#email').val();
+	            if (!(0, _function.isEmail)(email)) {
+	                toastr.warning("邮箱格式不正确");
+	            }
+	        }
+	    }, {
+	        key: 'onCheckPwd',
+	        value: function onCheckPwd() {
+	            var pwd = $('#password').val();
+	            if (!(0, _function.isStrongPassword)(pwd)) {
+	                toastr.warning("密码格式不正确");
+	            }
+	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
@@ -12877,7 +12916,71 @@
 	                        _react2.default.createElement('div', { id: 'pagination' })
 	                    )
 	                ),
-	                _react2.default.createElement(_modal2.default, { ref: 'addStoreUser', title: '添加商户', Id: 'addStoreUser', onConfirm: this.onConfirm })
+	                _react2.default.createElement(
+	                    _modal2.default,
+	                    { ref: 'addStoreUser', title: '添加商户', Id: 'addStoreUser', onConfirm: this.onConfirm },
+	                    _react2.default.createElement(
+	                        'form',
+	                        { id: 'newDishForm' },
+	                        _react2.default.createElement(
+	                            'fieldset',
+	                            null,
+	                            _react2.default.createElement(
+	                                'div',
+	                                { id: 'legend', className: '' },
+	                                _react2.default.createElement(
+	                                    'legend',
+	                                    { className: '' },
+	                                    '新建商户'
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { 'for': 'dishName' },
+	                                    ' 邮箱(必填)'
+	                                ),
+	                                _react2.default.createElement('input', { type: 'email', className: 'form-control', id: 'email',
+	                                    name: 'email', placeholder: '', onBlur: this.checkEmail }),
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    { className: 'help-block' },
+	                                    '此邮箱将作为商户登录的邮箱'
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { 'for': 'dishName' },
+	                                    ' 密码(必填,强密码)'
+	                                ),
+	                                _react2.default.createElement('input', { type: 'password', className: 'form-control', id: 'password',
+	                                    name: 'password', placeholder: '', onBlur: this.onCheckPwd }),
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    { className: 'help-block' },
+	                                    '必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-20之间'
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { 'for': 'dishName' },
+	                                    ' 确认密码(必填)'
+	                                ),
+	                                _react2.default.createElement('input', { type: 'password', className: 'form-control', id: 'secondPwd',
+	                                    name: 'secondPwd', placeholder: '' }),
+	                                _react2.default.createElement('p', { className: 'help-block' })
+	                            )
+	                        )
+	                    )
+	                )
 	            );
 	        }
 	    }]);
@@ -13028,6 +13131,32 @@
 	    Id: _react.PropTypes.string.isRequired,
 	    onConfirm: _react.PropTypes.func.isRequired,
 	    title: _react.PropTypes.string.isRequired
+	};
+
+/***/ },
+/* 325 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	/**
+	 * Created by caoshuai on 2016/4/10.
+	 */
+
+	//邮箱验证
+	var isEmail = exports.isEmail = function isEmail(str) {
+	    //var emailPtr = /^[a-z0-9][a-z0-9._-]{2,}@neotel\.com\.cn$/i;
+	    var emailPtr = /^([a-zA-Z0-9]+[._-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[._-]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+	    return emailPtr.test(str);
+	};
+
+	//强密码验证
+	var isStrongPassword = exports.isStrongPassword = function isStrongPassword(str) {
+	    var reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
+	    return reg.test(str);
 	};
 
 /***/ }

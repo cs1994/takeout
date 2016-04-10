@@ -8,3 +8,4 @@ target
 /RUNNING_PID
 /RUNNING_PID
 /node_modules
+/application.conf

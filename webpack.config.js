@@ -10,7 +10,7 @@ var path_ReactRouter = path.resolve(node_modules, 'react-router/umd/ReactRouter.
 
 module.exports = {
   entry: {
-    admin: './public/management/index.js',
+    admin: './public/admin/index.js',
     customer:'./public/customer/index.js',
     //customer:'./public/javascripts/customer/index.js'
   },

@@ -6,9 +6,7 @@ import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 import RestaurantList from "./RestaurantList.js"
 
-/**
- * µ¼º½À¸
- * */
+
 export default class CateringContent extends Component{
 
     changeResType(num){
@@ -34,16 +32,17 @@ export default class CateringContent extends Component{
                         //            <p>{type.name}</p>
                         //        </div>
                         //    )
-                        }
-                        else {
-                            return(
-                                //<div style={{top:top}} onClick={this.changeResType.bind(this,type.tagId)} id={id}>
-                                //    <p>{type.name}</p>
-                                //</div>
-                            )
-                        }
+                        //}
+                        //else {
+                        //    return(
+                        //        //<div style={{top:top}} onClick={this.changeResType.bind(this,type.tagId)} id={id}>
+                        //        //    <p>{type.name}</p>
+                        //        //</div>
+                        //    )
+                        //}
 
-                    }.bind(this))}
+                    //}.bind(this))
+                     }
                 </div>
                 <RestaurantList />
                 {

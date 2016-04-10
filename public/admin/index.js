@@ -1,5 +1,5 @@
 /**
- * Created by caoshuai on 2016/3/31.
+ * Created by caoshuai on 2016/4/10.
  */
 
 import "babel-polyfill"
@@ -9,9 +9,8 @@ import { render } from 'react-dom'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import App from './containers/App.js'
-//import manageApp from './reducers/reducers'
 import manageStore from './store/store.js'
-import HomePage from './components/HomePage/HomePage.js'
+import StoreUserList from './components/storeUser/StoreUserList.js'
 
 const store = manageStore();
 
@@ -20,7 +19,7 @@ render(
     <Provider store = {store}>
         <Router history={hashHistory}>
             <Route path="/" component={App}>
-                <IndexRoute component={HomePage}/>
+                <IndexRoute component={StoreUserList}/>
             </Route>
         </Router>
     </Provider>,

@@ -50,7 +50,7 @@ package object controllers {
   }
 
   @Singleton
-  class LoggingAction @Inject()(@Named("configured-VisitCounter") accessActor:ActorRef) extends ActionBuilder[Request] {
+  class LoggingAction @Inject() extends ActionBuilder[Request] {
     val logger = LoggerFactory.getLogger(getClass)
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
       logger.info(s"access log: path=${request.path},rawQueryString: ${request.rawQueryString},remoteAddress:${request.remoteAddress}" )

@@ -14,8 +14,6 @@
     <link href="//cdn.bootcss.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("toastr/2.1.0","toastr.min.css"))">
     <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/manage/login.css")">
-    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/manage/main.css")">
     <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/admin/main.css")"/>
 
 
@@ -35,9 +33,12 @@
     </script>
   </head>
   <body>
-    <script src="http://cdn.bootcss.com/jquery/3.0.0-beta1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+      <script src="//cdn.bootcss.com/tether/1.2.0/js/tether.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
     <script src="@routes.WebJarAssets.at(WebJarAssets.locate("toastr/2.1.0","toastr.min.js"))"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/common/ajax.js")"></script>
-
+    <div id="App"></div>
+    <script type="text/javascript" src="@routes.Assets.versioned("dist/admin.js")"></script>
   </body>
 </html>

@@ -16,7 +16,7 @@ export default class CateringContent extends Component{
         var id = "#type" + num;
         $(divId).css("color","#fff");
         $(id).css("color","#a6873e");
-        pCaterActions.firstAction.changeResType(num);
+        //pCaterActions.firstAction.changeResType(num);
         $('#searchInput').val('');
         $('#footer').show();
     }
@@ -24,21 +24,22 @@ export default class CateringContent extends Component{
         return(
             <div className="content">
                 <div className="navigation">
-                    {this.state.data.fenleiList.map(function(type,index){
-                        var top = 90*index+"px";
-                        var id="type" + type.tagId;
-                        if(type.tagId == this.state.data.resType){
-                            return(
-                                <div style={{top:top,color:"#a6873e"}} onClick={this.changeResType.bind(this,type.tagId)} id={id}>
-                                    <p>{type.name}</p>
-                                </div>
-                            )
+                    {
+                        //this.state.data.fenleiList.map(function(type,index){
+                        //var top = 90*index+"px";
+                        //var id="type" + type.tagId;
+                        //if(type.tagId == this.state.data.resType){
+                        //    return(
+                        //        <div style={{top:top,color:"#a6873e"}} onClick={this.changeResType.bind(this,type.tagId)} id={id}>
+                        //            <p>{type.name}</p>
+                        //        </div>
+                        //    )
                         }
                         else {
                             return(
-                                <div style={{top:top}} onClick={this.changeResType.bind(this,type.tagId)} id={id}>
-                                    <p>{type.name}</p>
-                                </div>
+                                //<div style={{top:top}} onClick={this.changeResType.bind(this,type.tagId)} id={id}>
+                                //    <p>{type.name}</p>
+                                //</div>
                             )
                         }
 

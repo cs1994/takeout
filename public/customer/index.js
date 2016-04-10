@@ -8,8 +8,9 @@ import { render } from 'react-dom'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import App from './containers/App.js'
-import manageApp from './reducers/reducers'
+//import manageApp from './reducers/reducers'
 import manageStore from './store/store.js'
+import HomePage from './components/HomePage/HomePage.js'
 
 const store = manageStore();
 
@@ -18,7 +19,7 @@ render(
     <Provider store = {store}>
         <Router history={hashHistory}>
             <Route path="/" component={App}>
-                <IndexRoute component={SliderContent}/>
+                <IndexRoute component={HomePage}/>
             </Route>
         </Router>
     </Provider>,

@@ -1,0 +1,43 @@
+@(conf: Map[String, String])
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>管理员</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/pchome2.png")">
+
+
+    <link href="//cdn.bootcss.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("toastr/2.1.0","toastr.min.css"))">
+    <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/manage/login.css")">
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/manage/main.css")">
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/admin/main.css")"/>
+
+
+      <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+
+    <script>
+
+            var $CONF$ = {};
+            @conf.map { case (key, value) =>
+            $CONF$['@key'] = '@value';
+            }
+            console.log($CONF$);
+
+    </script>
+  </head>
+  <body>
+    <script src="http://cdn.bootcss.com/jquery/3.0.0-beta1/jquery.min.js"></script>
+    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("toastr/2.1.0","toastr.min.js"))"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/common/ajax.js")"></script>
+
+  </body>
+</html>

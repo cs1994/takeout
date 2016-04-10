@@ -15,12 +15,9 @@ export default class HomePage extends Component {
         super(props);
     }
     componentWillMount(){
-        this.props.dispatch(fetchSliders());
+        //this.props.dispatch(fetchSliders());
     }
-
     render() {
-
-        //console.log("!!!!!!!!"¡¡+ JSON.stringify(this.props.sliderList));
         return (
             <div >
                 <CateringHeader />

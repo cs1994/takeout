@@ -1,0 +1,206 @@
+a{
+    text-decoration: none;
+    color: #666;
+}
+a:focus,
+a:hover{
+    color: #5bc0de;
+}
+
+a.activeHeader {
+    color: #5bc0de!important;
+    background: #e7e7e7!important;
+}
+
+
+a.activeOrderNavbar {
+    text-decoration: none!important;
+    color: #5bc0de;
+    background-color: #eee!important;
+}
+
+.navbar-brand {
+    padding: 0;
+}
+.navbar-brand img{
+    height: 100%;
+    width: 100%;
+}
+
+
+#OrderManager .orderMainBox {
+min-height: 600px;border-left: 2px solid #ddd;}
+
+#OrderManager .orderMainBox .mainBox {
+    padding: 20px;
+}
+
+body {
+}
+
+tbody {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+a.navbar-brand {
+    width: 150px;
+}
+
+#ShanghuAdd form .checkbox label {
+    margin-right: 2rem;
+}
+
+#newTagInput .input-group-addon>button {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+#newTagInput {
+    display: none;
+}
+
+#newTagInput div.input-group-addon {
+    width: 40px;
+    padding: 0;
+}
+
+p.help-block {
+    font-size: 10px;
+}
+
+#OrderManager>.container {margin: 50px;width: 100%;}
+
+span.badge {
+    background: #D9534F;
+}
+span.badge.undeal {
+    background: #5CB85C;
+}
+
+#OrderManager .row>.col-sm-3 {
+    max-width: 200px;
+}
+
+img#dishImage {
+    width: 100%;
+}
+/**************************************************创建活动页面***********************************************/
+#activityAdd .form-group{
+    margin-top:20px;
+    height:40px;
+}
+
+#activityAdd .form-group label{
+    text-align: right;
+    padding:5px 10px 5px 10px;
+    color:rgb(62,25,0);
+}
+#activityAdd .form-group input{
+    height: 30px;
+    line-height: 20px;
+    width:80%;
+}
+#activityAdd .form-group select{
+    height: 30px;
+    line-height: 20px;
+    width:80%;
+}
+#activityAdd .onePicBox .text{
+    color:rgb(62,25,0);
+}
+#activityAdd .onePicBox {
+    margin-top: 10px;
+}
+#activityAdd .textTitle{
+    margin:15px 5px 5px 5px;
+    color: rgb(62,25,0);
+}
+a,a:hover{
+    text-decoration: none;
+    color: inherit;
+}
+.addBrandShowConfirmBtn{
+    margin-top: 30px;
+    width: 100%;
+}
+#activityList .selectPanel{
+    margin-bottom: 30px;
+}
+#activityList .selectPanel .form-group{
+    margin-right: 20px;
+}
+
+#MessageInfo .reply {
+    border-bottom: 1px dashed #ddd;
+    padding: 5px;
+}
+/*===============================================统计报表页面===============================================*/
+.chartManager .chartTitle{
+    box-shadow: 0 0 5px #757D75;
+    -webkit-box-shadow: 0 0 5px #757D75;
+    -moz-box-shadow: 0 0 5px #757D75;
+    color: #fff;
+    background-color: #6C7A89;
+    background-image: linear-gradient(to bottom,#95A5A6, #D2D7D3);
+}
+.chartManager .chartTitle span{
+    font-size: 14px;
+    color: #00e5ff;
+    text-shadow: 0 0 0px #000, 0 0 0px #000, 0 0 5px #000, 0 0 0px #95A5A6, 0 0 1px #D2D7D3;
+    height: 30px;
+    padding: 5px 5px;
+    line-height: 30px;
+}
+.recommendAdd .form-group input{
+    height:30px;
+}
+.recommendAdd .form-group{
+    margin-top:10px;
+    height:40px;
+}
+
+.recommendAdd .form-group label{
+    text-align: right;
+    padding:5px 10px 5px 10px;
+    color:rgb(62,25,0);
+}
+.recommendAdd .form-group input{
+    height: 30px;
+    line-height: 20px;
+    width:80%;
+}
+.recommendAdd .form-group select{
+    height: 30px;
+    line-height: 20px;
+    width:80%;
+}
+/*=====================================================统计页面==================================================*/
+.clearfix{
+    margin-bottom: 30px;
+}
+.clearfix .light{
+    border-radius: 4px 0 0 4px;
+    width: 50%;
+    height: 100px;
+    padding:20px 10px 20px 10px;
+    line-height: 30px;
+    overflow: hidden;
+    vertical-align: middle;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+}
+.clearfix .dark{
+    border-radius:0 4px 4px 0;
+    width: 50%;
+    height: 100px;
+    padding:20px 10px 20px 10px;
+    line-height: 30px;
+    overflow: hidden;
+    vertical-align: middle;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+}

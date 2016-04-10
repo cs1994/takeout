@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+    </head>
+<body>
+
+<script>
+
+    var RheaUtil = new function(){};
+    // 时间格式转化
+    RheaUtil.timeFormat = function(timeNum){
+        var format = function(time,format){
+            var t = new Date(time);
+            var tf = function(i){return (i < 10 ? '0' : '') + i};
+            return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a){
+                switch(a){
+                    case 'yyyy':
+                        return tf(t.getFullYear());
+                        break;
+                    case 'MM':
+                        return tf(t.getMonth() + 1);
+                        break;
+                    case 'mm':
+                        return tf(t.getMinutes());
+                        break;
+                    case 'dd':
+                        return tf(t.getDate());
+                        break;
+                    case 'HH':
+                        return tf(t.getHours());
+                        break;
+                    case 'ss':
+                        return tf(t.getSeconds());
+                        break;
+                };
+            });
+        }
+
+        return format(timeNum, 'yyyy-MM-dd HH:mm:ss');
+    };
+
+    // 邮箱格式验证
+    RheaUtil.isEmail = function(str) {
+        var emailPtr = /^[a-z0-9][a-z0-9._-]{2,}@neotel\.com\.cn$/i;
+        return emailPtr.test(str);
+    };
+
+    //[a-z0-9_-]+(?:\.[a-z0-9_-]+){1,3}
+
+    // 按精度取值
+    RheaUtil.roundTo = function(base, precision) {
+        var m = Math.pow(10, precision);
+        var a = Math.round(base * m) / m;
+        return a;
+    };
+    // 按精度取值，保留0
+    RheaUtil.floatTo = function(base, precision) {
+        var a = this.roundTo(base, precision);
+        var s = a.toString();
+        var decimalIndex = s.indexOf(".");
+        if (precision > 0 && decimalIndex < 0) {
+            decimalIndex = s.length;
+            s += ".";
+        }
+        while (s.length < decimalIndex + precision + 1 ) {
+            s += '0';
+        }
+        return s;
+    };
+
+    // 生成受约束的随机数 eg. 上传1~100之间的随机数  RheaUtil.randomBetween(1,100)
+    RheaUtil.randomBetween = function(min, max){
+        return min + Math.floor(Math.random() * (max - min + 1));
+    };
+
+    // 将数字转换为序数
+    RheaUtil.getOrdinal = function(n) {
+        var ord = 'th';
+        if (n % 10 == 1 && n % 100 != 11) {
+            ord = 'st';
+        } else if (n % 10 == 2 && n % 100 != 12) {
+            ord = 'nd';
+        } else if (n % 10 == 3 && n % 100 != 13) {
+            ord = 'rd';
+        }
+        return n + ord;
+    };
+
+    RheaUtil.getWeek = function(){
+        var date = new Date();
+        var day = date.getDate();
+        var date_first = new Date(date.setDate(1));
+        var week_first = date_first.getDay();
+        if(week_first == 0) week_first = 7;
+        var day_first = date_first.getDate();
+        var week = parseInt((day+week_first-day_first-1)/7)+1;
+        return week;
+    };
+
+
+//    alert(RheaUtil.floatTo(0.0500000002, 2));
+
+    var list = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+        {id: 4}
+    ];
+
+    list = $.grep(list, function(e, index){
+       return e.id != 3;
+    });
+
+    console.log(list);
+
+
+</script>
+</body>
+</html>

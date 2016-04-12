@@ -80,6 +80,19 @@ function fetchALists() {
         //    }).catch(e => console.log('error = ' + e));
     }
 }
+export const addRestaurantUsers =(data)=>{
+    return dispatch => {
+        return fetch('/facew/assemble/getassemble')
+            .then( function(response){
+                return response.json();
+            }).then(function(json){
+                //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+                if(json.errCode ==0){
+                    dispatch(getAdList(json));
+                }
+            }).catch(e => console.log('error = ' + e));
+    }
+}
 
 
 

@@ -36,4 +36,34 @@ class Manage  @Inject()(
 
   private val adminAuth = loggingAction
 
+  //add store admin account
+  def addStoreAdmin = adminAuth.async{implicit request =>
+    val postData=request.body.asJson.get
+    val email=(postData \ "email").as[String]
+    val password=(postData \ "password").as[String]
+
+    adminDao.findByEmail(emailStr).flatMap { adminOpt =>
+      if(adminOpt.isDefined){
+        Future.successful(Ok(CustomerErrorCode.userAlreadyExists))
+      }else{
+        adminDao.createUser(
+          emailStr,
+          password,
+          UserState.enable,
+          UserConstants.UserType.StoreAdmin,
+          request.remoteAddress,
+          System.currentTimeMillis()
+        ).map{result=>
+          if(result>0){
+            Ok(success)
+          }else{
+            Ok(CustomerErrorCode.canNotCreateUser)
+          }
+        }
+      }
+    }
+
+
+  }
+
 }

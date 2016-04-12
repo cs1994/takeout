@@ -8,7 +8,10 @@
 #GET     /count                      controllers.CountController.count
 ## An example controller showing how to write asynchronous code
 ## admin
-GET     /takeout/admin                    controllers.admin.AdminAuth.sysIndex
+GET         /takeout/admin                       @controllers.admin.AdminAuth.sysIndex
+POST        /admin/manager/u/add                 @controllers.admin.Manage.addStoreAdmin
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                                               controllers.WebJarAssets.at(file)

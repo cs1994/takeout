@@ -9,7 +9,7 @@
 ## An example controller showing how to write asynchronous code
 ## admin
 GET         /takeout/admin                       @controllers.admin.AdminAuth.sysIndex
-POST        /admin/manager/u/add                 @controllers.admin.Manage.addStoreAdmin
+#POST        /admin/manager/u/add                 @controllers.admin.Manage.addStoreAdmin
 
 
 

@@ -8,7 +8,7 @@ function manageStorers(state = {}, action) {
     switch (action.type) {
         case GET_STORE_ADMIN:
             return Object.assign({}, state, {
-                storeUserList:action.lists
+                storeUserList:action.list
             });
         //case ADD_SLIDER:
         //    return Object.assign({}, state, {

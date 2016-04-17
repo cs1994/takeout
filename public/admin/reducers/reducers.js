@@ -2,14 +2,14 @@
  * Created by caoshuai on 2016/4/10.
  */
 import { combineReducers } from 'redux'
-import { } from '../actions/store/actions.js'
+import { GET_STORE_ADMIN} from '../actions/storeUser/actions.js'
 
-function manageRestaurants(state = {}, action) {
+function manageStorers(state = {}, action) {
     switch (action.type) {
-        //case FETCH_SLIDER:
-        //    return Object.assign({}, state, {
-        //        storeUserList:action.lists
-        //    });
+        case GET_STORE_ADMIN:
+            return Object.assign({}, state, {
+                storeUserList:action.lists
+            });
         //case ADD_SLIDER:
         //    return Object.assign({}, state, {
         //        addSliderPic:action.item

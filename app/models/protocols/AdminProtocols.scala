@@ -16,22 +16,36 @@ trait AdminProtocols extends BaseJsonProtocols{
         "name" -> obj.name,
         "description" -> obj.description,
         "announcer" -> obj.announcer,
-        "basePrice" -> obj.baseprice,
-        "packFee" -> obj.packfee,
+        "basePrice" -> obj.basePrice,
+        "packFee" -> obj.packFee,
         "sales" -> obj.sales,
         "pic" -> obj.pic,
-        "duringTime" -> obj.duringtime,
+        "duringTime" -> obj.duringTime,
         "category" -> obj.tag,
         "address" -> obj.address,
         "concessions" -> obj.concessions,
-        "isOpen" -> obj.isopen,
+        "isOpen" -> obj.isOpen,
         "longitude" -> obj.longitude,
         "latitude" -> obj.latitude,
-        "openingTime" -> obj.openingtime,
+        "openingTime" -> obj.openingTime,
         "stars" -> obj.stars,
-        "ownerid"->obj.ownerid,
-        "authState" -> obj.authstate,
+        "ownerid"->obj.ownerId,
+        "authState" -> obj.authState,
         "tel"->obj.tel
+      )
+    }
+  }
+
+  implicit val rUAdminWriter: Writes[rAdmin] = new Writes[rAdmin] {
+    override def writes(obj: rAdmin): JsValue = {
+      Json.obj(
+        "id" -> obj.id,
+        "email" -> obj.email,
+        "nickName" -> obj.nickName,
+        "headImg" -> obj.headImg,
+        "state" -> obj.state,
+        "userType" -> obj.userType,
+        "createTime" -> obj.createTime
       )
     }
   }

@@ -3,7 +3,7 @@ import javax.inject.Inject
 
 import com.google.inject.Singleton
 import common.UserConstants.UserState
-import common.errCode.AdminErrcode._
+import common.errCode.{AdminErrcode,CustomerErrorCode}
 import common.{Constants, UserConstants}
 import controllers.ActionUtils
 import models.protocols.AdminProtocols
@@ -36,34 +36,43 @@ class Manage  @Inject()(
 
   private val adminAuth = loggingAction
 
-  //add store admin account
-//  def addStoreAdmin = adminAuth.async{implicit request =>
-//    val postData=request.body.asJson.get
-//    val email=(postData \ "email").as[String]
-//    val password=(postData \ "password").as[String]
-//
-//    adminDao.findByEmail(emailStr).flatMap { adminOpt =>
-//      if(adminOpt.isDefined){
-//        Future.successful(Ok(CustomerErrorCode.userAlreadyExists))
-//      }else{
-//        adminDao.createUser(
-//          emailStr,
-//          password,
-//          UserState.enable,
-//          UserConstants.UserType.StoreAdmin,
-//          request.remoteAddress,
-//          System.currentTimeMillis()
-//        ).map{result=>
-//          if(result>0){
-//            Ok(success)
-//          }else{
-//            Ok(CustomerErrorCode.canNotCreateUser)
-//          }
-//        }
-//      }
-//    }
-//
-//
-//  }
+//  add store admin account
+  def addStoreAdmin = adminAuth.async{implicit request =>
+    val postData=request.body.asJson.get
+    val email=(postData \ "email").as[String]
+    val password=(postData \ "password").as[String]
+
+    adminDao.findByEmail(email).flatMap { adminOpt =>
+      if(adminOpt.isDefined){
+        Future.successful(Ok(CustomerErrorCode.userAlreadyExists))
+      }else{
+        adminDao.createUser(
+          email,
+          password,
+          UserState.enable,
+          UserConstants.UserType.StoreAdmin,
+          request.remoteAddress,
+          System.currentTimeMillis()
+        ).map{result=>
+          if(result>0){
+            Ok(success)
+          }else{
+            Ok(CustomerErrorCode.canNotCreateUser)
+          }
+        }
+      }
+    }
+
+
+  }
+
+  def listStoreAdmin(page:Int=1) = adminAuth.async{
+    //todo
+    val newPage = if(page<1) 1 else page
+    adminDao.listByPage(newPage).map{
+      case(totalPage,admins)=>
+        Ok(successResult(Json.obj("total"->totalPage,"cur"->newPage,"list"->admins.map(rUAdminWriter.writes))))
+    }
+  }
 
 }

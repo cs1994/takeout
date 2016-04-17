@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "3cd3f437393e58e1fe7a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a1452d0853a1533b4b97"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12729,6 +12729,20 @@
 	        //    }).catch(e => console.log('error = ' + e));
 	    };
 	}
+	var addRestaurantUsers = exports.addRestaurantUsers = function addRestaurantUsers(data) {
+	    return function (dispatch) {
+	        return fetch('/facew/assemble/getassemble').then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	            if (json.errCode == 0) {
+	                dispatch(getAdList(json));
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
 
 /***/ },
 /* 323 */
@@ -12753,6 +12767,8 @@
 	var _modal2 = _interopRequireDefault(_modal);
 
 	var _function = __webpack_require__(325);
+
+	var _actions = __webpack_require__(326);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12815,6 +12831,7 @@
 	            }
 	            var postData = { email: email, password: password };
 	            console.log("$$$$ " + JSON.stringify(postData));
+	            this.props.dispatch((0, _actions.addRestaurantUsers)(postData, this));
 	        }
 	    }, {
 	        key: 'checkEmail',
@@ -13157,6 +13174,72 @@
 	var isStrongPassword = exports.isStrongPassword = function isStrongPassword(str) {
 	    var reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
 	    return reg.test(str);
+	};
+
+/***/ },
+/* 326 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	/**
+	 * Created by caoshuai on 2016/4/16.
+	 */
+
+	var GET_STORELIST = exports.GET_STORELIST = 'GET_STORELIST';
+
+	function getStoreList(list) {
+	    return {
+	        type: GET_STORELIST,
+	        list: list
+	    };
+	}
+	function getSliderList(json) {
+	    return {
+	        type: GET_SLIDERLIST,
+	        lists: json.result
+	    };
+	}
+
+	function fetchALists() {
+	    return function (dispatch) {
+	        //console.log("start fetch");
+	        //return fetch('/facew/assemble/getassemble')
+	        //    .then( function(response){
+	        //        return response.json();
+	        //    }).then(function(json){
+	        //        //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	        //        if(json.errCode ==0){
+	        //            dispatch(getAdList(json));
+	        //        }
+	        //    }).catch(e => console.log('error = ' + e));
+	    };
+	}
+	var addRestaurantUsers = exports.addRestaurantUsers = function addRestaurantUsers(data, self) {
+	    return function (dispatch) {
+	        self.refs.addStoreUser.close();
+	        //    return fetch('/admin/manager/u/add', {
+	        //        credentials:'include',
+	        //        headers:{
+	        //            'Accept': 'application/json',
+	        //            'Content-Type': 'application/json'
+	        //        },
+	        //        method:'POST',
+	        //        body:JSON.stringify(data)
+	        //    })
+	        //        .then( function(response){
+	        //            return response.json();
+	        //        }).then(function(json){
+	        //            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	        //            if(json.errCode ==0){
+	        //                //dispatch(getAdList(json));
+	        //
+	        //            }
+	        //        }).catch(e => console.log('error = ' + e));
+	    };
 	};
 
 /***/ }

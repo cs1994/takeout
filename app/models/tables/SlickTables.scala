@@ -14,9 +14,53 @@ trait SlickTables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Array(tCollection.schema, tDish.schema, tDishComment.schema, tDishTag.schema, tDishTagRelation.schema, tRefund.schema, tRestaurant.schema, tRestaurantComment.schema, tRestaurantConcessions.schema, tRestaurantOrder.schema, tRestaurantOrderAddress.schema, tRestaurantOrderDetail.schema, tRestaurantTag.schema, tRestaurantTop.schema, tUser.schema).reduceLeft(_ ++ _)
+  lazy val schema: profile.SchemaDescription = Array(tAdmin.schema, tCollection.schema, tDish.schema, tDishComment.schema, tDishTag.schema, tDishTagRelation.schema, tRefund.schema, tRestaurant.schema, tRestaurantComment.schema, tRestaurantConcessions.schema, tRestaurantOrder.schema, tRestaurantOrderAddress.schema, tRestaurantOrderDetail.schema, tRestaurantTag.schema, tRestaurantTop.schema, tUser.schema).reduceLeft(_ ++ _)
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
+
+  /** Entity class storing rows of table tAdmin
+    *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
+    *  @param email Database column email SqlType(VARCHAR), Length(255,true), Default()
+    *  @param nickName Database column nick_name SqlType(VARCHAR), Length(255,true), Default()
+    *  @param headImg Database column head_img SqlType(VARCHAR), Length(255,true), Default()
+    *  @param state Database column state SqlType(INT), Default(0)
+    *  @param userType Database column user_type SqlType(INT), Default(0)
+    *  @param createTime Database column create_time SqlType(BIGINT), Default(0)
+    *  @param ip Database column ip SqlType(VARCHAR), Length(255,true), Default()
+    *  @param secure Database column secure SqlType(VARCHAR), Length(255,true), Default() */
+  case class rAdmin(id: Long, email: String = "", nickName: String = "", headImg: String = "", state: Int = 0, userType: Int = 0, createTime: Long = 0L, ip: String = "", secure: String = "")
+  /** GetResult implicit for fetching rAdmin objects using plain SQL queries */
+  implicit def GetResultrAdmin(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rAdmin] = GR{
+    prs => import prs._
+      rAdmin.tupled((<<[Long], <<[String], <<[String], <<[String], <<[Int], <<[Int], <<[Long], <<[String], <<[String]))
+  }
+  /** Table description of table admin. Objects of this class serve as prototypes for rows in queries. */
+  class tAdmin(_tableTag: Tag) extends Table[rAdmin](_tableTag, "admin") {
+    def * = (id, email, nickName, headImg, state, userType, createTime, ip, secure) <> (rAdmin.tupled, rAdmin.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(id), Rep.Some(email), Rep.Some(nickName), Rep.Some(headImg), Rep.Some(state), Rep.Some(userType), Rep.Some(createTime), Rep.Some(ip), Rep.Some(secure)).shaped.<>({r=>import r._; _1.map(_=> rAdmin.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8.get, _9.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
+    val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
+    /** Database column email SqlType(VARCHAR), Length(255,true), Default() */
+    val email: Rep[String] = column[String]("email", O.Length(255,varying=true), O.Default(""))
+    /** Database column nick_name SqlType(VARCHAR), Length(255,true), Default() */
+    val nickName: Rep[String] = column[String]("nick_name", O.Length(255,varying=true), O.Default(""))
+    /** Database column head_img SqlType(VARCHAR), Length(255,true), Default() */
+    val headImg: Rep[String] = column[String]("head_img", O.Length(255,varying=true), O.Default(""))
+    /** Database column state SqlType(INT), Default(0) */
+    val state: Rep[Int] = column[Int]("state", O.Default(0))
+    /** Database column user_type SqlType(INT), Default(0) */
+    val userType: Rep[Int] = column[Int]("user_type", O.Default(0))
+    /** Database column create_time SqlType(BIGINT), Default(0) */
+    val createTime: Rep[Long] = column[Long]("create_time", O.Default(0L))
+    /** Database column ip SqlType(VARCHAR), Length(255,true), Default() */
+    val ip: Rep[String] = column[String]("ip", O.Length(255,varying=true), O.Default(""))
+    /** Database column secure SqlType(VARCHAR), Length(255,true), Default() */
+    val secure: Rep[String] = column[String]("secure", O.Length(255,varying=true), O.Default(""))
+  }
+  /** Collection-like TableQuery object for table tAdmin */
+  lazy val tAdmin = new TableQuery(tag => new tAdmin(tag))
 
   /** Entity class storing rows of table tCollection
     *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey

@@ -1,4 +1,4 @@
-name := """facew"""
+name := """takeout"""
 
 version := "1.0-SNAPSHOT"
 

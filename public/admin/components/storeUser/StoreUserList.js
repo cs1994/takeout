@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 import Modal from '../../../javascripts/common/modal.js'
 import {isEmail,isStrongPassword} from "../../../javascripts/common/function.js"
+import {addRestaurantUsers} from "../../actions/storeUser/actions.js"
 /**
  * 餐厅主人列表
  * */
@@ -44,6 +45,7 @@ export default class RestaurantList extends Component{
         }
         var postData = {email: email, password: password};
         console.log("$$$$ " + JSON.stringify(postData))
+        this.props.dispatch(addRestaurantUsers(postData,this))
     }
     checkEmail(){
         var email = $('#email').val();

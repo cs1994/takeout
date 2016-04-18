@@ -2,7 +2,7 @@
  * Created by caoshuai on 2016/4/10.
  */
 import { combineReducers } from 'redux'
-import { GET_STORE_ADMIN,GET_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
+import { GET_STORE_ADMIN,ADD_STORE_ADMIN,GET_RESTAURANT_TAG,ADD_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
 
 function manageStorers(state = {}, action) {
     switch (action.type) {
@@ -10,9 +10,19 @@ function manageStorers(state = {}, action) {
             return Object.assign({}, state, {
             storeUserList:action.list
         });
+        case ADD_STORE_ADMIN:
+            return Object.assign({}, state, {
+                storeUserList:[{id:action.id,email:action.data.email,nickName:action.data.email,
+                headImg:"",state:1,userType:2,createTime:action.time},...state.storeUserList]
+            });
         case GET_RESTAURANT_TAG:
             return Object.assign({}, state, {
                 resTags:action.list
+            });
+        case ADD_RESTAURANT_TAG:
+            return Object.assign({}, state, {
+                resTags:[{id:action.id,tagName:action.data.nameCh,englishName:action.data.nameEn,
+                    order:action.data.index},...state.resTags]
             });
         //case DELETE_SLIDER:
         //    return Object.assign({}, state, {

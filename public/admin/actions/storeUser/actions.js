@@ -3,7 +3,9 @@
  */
 
 export const GET_STORE_ADMIN = 'GET_STORE_ADMIN';
+export const ADD_STORE_ADMIN = 'ADD_STORE_ADMIN';
 export const GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
+export const ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
 
 
 function fetchStoreAdminList(list) {
@@ -12,11 +14,17 @@ function fetchStoreAdminList(list) {
         list:list
     }
 }
+function addStoreAdmin(data,id,time){
+    return{type: ADD_STORE_ADMIN,data:data,id:id,time:time}
+}
 function fetchClassifyList(list) {
     return {
         type: GET_RESTAURANT_TAG,
         list:list
     }
+}
+function addRestaurantTag(data,id){
+    return{type:ADD_RESTAURANT_TAG,data:data,id:id}
 }
 
 
@@ -53,6 +61,7 @@ export const addRestaurantUsers =(data,self)=>{
                 if(json.errCode ==0){
                     //console.log("################### " +JSON.stringify(json))
                     //dispatch(getAdList(json));
+                    dispatch(addStoreAdmin(data,json.id,Date.parse(new Date())))
                     self.refs.addStoreUser.close();
                 }
             }).catch(e => console.log('error = ' + e));
@@ -91,7 +100,7 @@ export const addFoodClassifys =(data,self)=>{
                 //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
                 if(json.errCode ==0){
                     //console.log("################### " +JSON.stringify(json))
-                    //dispatch(getAdList(json));
+                    dispatch(addRestaurantTag(data,json.id));
                     self.refs.addStoreClassify.close();
                 }
             }).catch(e => console.log('error = ' + e));

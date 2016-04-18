@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "be6ce74f3885c37b9e8e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "98427f9e0045b4f70a1a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12611,9 +12611,9 @@
 
 	var _actions = __webpack_require__(322);
 
-	/**
-	 * Created by caoshuai on 2016/4/10.
-	 */
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
+	                                                                                                                                                                                                     * Created by caoshuai on 2016/4/10.
+	                                                                                                                                                                                                     */
 
 
 	function manageStorers() {
@@ -12625,9 +12625,19 @@
 	            return Object.assign({}, state, {
 	                storeUserList: action.list
 	            });
+	        case _actions.ADD_STORE_ADMIN:
+	            return Object.assign({}, state, {
+	                storeUserList: [{ id: action.id, email: action.data.email, nickName: action.data.email,
+	                    headImg: "", state: 1, userType: 2, createTime: action.time }].concat(_toConsumableArray(state.storeUserList))
+	            });
 	        case _actions.GET_RESTAURANT_TAG:
 	            return Object.assign({}, state, {
 	                resTags: action.list
+	            });
+	        case _actions.ADD_RESTAURANT_TAG:
+	            return Object.assign({}, state, {
+	                resTags: [{ id: action.id, tagName: action.data.nameCh, englishName: action.data.nameEn,
+	                    order: action.data.index }].concat(_toConsumableArray(state.resTags))
 	            });
 	        //case DELETE_SLIDER:
 	        //    return Object.assign({}, state, {
@@ -12673,7 +12683,9 @@
 	 */
 
 	var GET_STORE_ADMIN = exports.GET_STORE_ADMIN = 'GET_STORE_ADMIN';
+	var ADD_STORE_ADMIN = exports.ADD_STORE_ADMIN = 'ADD_STORE_ADMIN';
 	var GET_RESTAURANT_TAG = exports.GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
+	var ADD_RESTAURANT_TAG = exports.ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
 
 	function fetchStoreAdminList(list) {
 	    return {
@@ -12681,11 +12693,17 @@
 	        list: list
 	    };
 	}
+	function addStoreAdmin(data, id, time) {
+	    return { type: ADD_STORE_ADMIN, data: data, id: id, time: time };
+	}
 	function fetchClassifyList(list) {
 	    return {
 	        type: GET_RESTAURANT_TAG,
 	        list: list
 	    };
+	}
+	function addRestaurantTag(data, id) {
+	    return { type: ADD_RESTAURANT_TAG, data: data, id: id };
 	}
 
 	function fetchStoreAdminLists(page) {
@@ -12721,6 +12739,7 @@
 	            if (json.errCode == 0) {
 	                //console.log("################### " +JSON.stringify(json))
 	                //dispatch(getAdList(json));
+	                dispatch(addStoreAdmin(data, json.id, Date.parse(new Date())));
 	                self.refs.addStoreUser.close();
 	            }
 	        }).catch(function (e) {
@@ -12761,7 +12780,7 @@
 	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
 	            if (json.errCode == 0) {
 	                //console.log("################### " +JSON.stringify(json))
-	                //dispatch(getAdList(json));
+	                dispatch(addRestaurantTag(data, json.id));
 	                self.refs.addStoreClassify.close();
 	            }
 	        }).catch(function (e) {

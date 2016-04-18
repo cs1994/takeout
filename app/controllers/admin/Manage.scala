@@ -55,7 +55,7 @@ class Manage  @Inject()(
           System.currentTimeMillis()
         ).map{result=>
           if(result>0){
-            Ok(success)
+            Ok(successResult(Json.obj("id" ->result)))
           }else{
             Ok(CustomerErrorCode.canNotCreateUser)
           }
@@ -89,7 +89,7 @@ class Manage  @Inject()(
          nameCh,nameEn,index
         ).map{result=>
           if(result>0){
-            Ok(success)
+            Ok(successResult(Json.obj("id" ->result)))
           }else{
             Ok(AdminErrcode.canNotCreateClassify)
           }

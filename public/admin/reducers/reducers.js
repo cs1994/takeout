@@ -24,6 +24,10 @@ function manageStorers(state = {}, action) {
                 resTags:[{id:action.id,tagName:action.data.nameCh,englishName:action.data.nameEn,
                     order:action.data.index},...state.resTags]
             });
+        //case GET_RESTAURANT_TAG_DETAIL:
+        //    return Object.assign({}, state, {
+        //        classifyDetail:state.resTags[index]
+        //    });
         //case DELETE_SLIDER:
         //    return Object.assign({}, state, {
         //        sliderList:action.lists

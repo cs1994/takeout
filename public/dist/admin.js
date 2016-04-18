@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "98427f9e0045b4f70a1a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "73d656296180e1ff611a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12639,6 +12639,10 @@
 	                resTags: [{ id: action.id, tagName: action.data.nameCh, englishName: action.data.nameEn,
 	                    order: action.data.index }].concat(_toConsumableArray(state.resTags))
 	            });
+	        //case GET_RESTAURANT_TAG_DETAIL:
+	        //    return Object.assign({}, state, {
+	        //        classifyDetail:state.resTags[index]
+	        //    });
 	        //case DELETE_SLIDER:
 	        //    return Object.assign({}, state, {
 	        //        sliderList:action.lists
@@ -13678,8 +13682,10 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ClassifyShow).call(this, props));
 
+	        _this.state = { "tag": 1 };
 	        _this.openModal = _this.openModal.bind(_this);
 	        _this.onConfirm = _this.onConfirm.bind(_this);
+	        _this.getClassifyDetail = _this.getClassifyDetail.bind(_this);
 
 	        return _this;
 	    }
@@ -13708,6 +13714,14 @@
 	            var postData = { nameCh: nameCh, nameEn: nameEn, index: parseInt(index) };
 	            console.log("$$$$ " + JSON.stringify(postData));
 	            this.props.dispatch((0, _actions.addFoodClassifys)(postData, this));
+	        }
+	    }, {
+	        key: 'getClassifyDetail',
+	        value: function getClassifyDetail(data, index) {
+	            $('#nameCh').val(data.tagName);
+	            $('#nameEn').val(data.englishName);
+	            $('#index').val(data.order);
+	            this.refs.addStoreClassify.open();
 	        }
 	    }, {
 	        key: 'render',
@@ -13807,7 +13821,7 @@
 	                                                null,
 	                                                _react2.default.createElement(
 	                                                    'button',
-	                                                    { className: 'btn btn-info btn-sm' },
+	                                                    { className: 'btn btn-info btn-sm', onClick: this.getClassifyDetail.bind(this, e, index) },
 	                                                    '修改'
 	                                                ),
 	                                                '  ',

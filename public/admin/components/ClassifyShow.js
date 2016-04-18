@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 import Modal from '../../javascripts/common/modal.js'
 import {isEmail,isStrongPassword,timeFormat} from "../../javascripts/common/function.js"
-import {addFoodClassifys,fetchAllFoodClassify} from "../actions/storeUser/actions.js"
+import {addFoodClassifys,fetchAllFoodClassify,getClassifyDetails} from "../actions/storeUser/actions.js"
 /**
  * 餐厅主人列表
  * */
@@ -16,8 +16,10 @@ const contextTypes =  {
 export default class ClassifyShow extends Component{
     constructor(props) {
         super(props);
+        this.state=({"tag":1});
         this.openModal=this.openModal.bind(this);
         this.onConfirm=this.onConfirm.bind(this);
+        this.getClassifyDetail=this.getClassifyDetail.bind(this);
 
     }
     componentWillMount(){
@@ -38,6 +40,12 @@ export default class ClassifyShow extends Component{
         var postData = {nameCh: nameCh, nameEn:nameEn,index:parseInt(index)};
         console.log("$$$$ " + JSON.stringify(postData))
         this.props.dispatch(addFoodClassifys(postData,this))
+    }
+    getClassifyDetail(data,index){
+        $('#nameCh').val(data.tagName)
+        $('#nameEn').val(data.englishName)
+        $('#index').val(data.order)
+        this.refs.addStoreClassify.open();
     }
     render(){
         const {resTags} = this.props;
@@ -73,7 +81,7 @@ export default class ClassifyShow extends Component{
                                                 <td>{e.englishName}</td>
                                                 <td>{e.order}</td>
                                                 <td>
-                                                    <button className="btn btn-info btn-sm" >修改</button>&nbsp;&nbsp;
+                                                    <button className="btn btn-info btn-sm" onClick={this.getClassifyDetail.bind(this,e,index)}>修改</button>&nbsp;&nbsp;
                                                     <button className="btn btn-danger btn-sm" >删除</button>&nbsp;&nbsp;
                                                 </td>
                                             </tr>
@@ -136,7 +144,7 @@ ClassifyShow.propTypes = {
 
 function getRestaurantList(state){
     return{
-        resTags: state.manageStorers.resTags?state.manageStorers.resTags:[]
+        resTags: state.manageStorers.resTags?state.manageStorers.resTags:[],
     }
 }
 export default connect(getRestaurantList)(ClassifyShow)

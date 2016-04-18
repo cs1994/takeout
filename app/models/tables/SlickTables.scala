@@ -580,23 +580,29 @@ trait SlickTables {
 
   /** Entity class storing rows of table tRestaurantTag
     *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
-    *  @param tagName Database column tag_name SqlType(VARCHAR), Length(255,true), Default() */
-  case class rRestaurantTag(id: Long, tagName: String = "")
+    *  @param tagName Database column tag_name SqlType(VARCHAR), Length(255,true), Default()
+    *  @param englishName Database column english_name SqlType(VARCHAR), Length(255,true), Default()
+    *  @param order Database column order SqlType(INT), Default(0) */
+  case class rRestaurantTag(id: Long, tagName: String = "", englishName: String = "", order: Int = 0)
   /** GetResult implicit for fetching rRestaurantTag objects using plain SQL queries */
-  implicit def GetResultrRestaurantTag(implicit e0: GR[Long], e1: GR[String]): GR[rRestaurantTag] = GR{
+  implicit def GetResultrRestaurantTag(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rRestaurantTag] = GR{
     prs => import prs._
-      rRestaurantTag.tupled((<<[Long], <<[String]))
+      rRestaurantTag.tupled((<<[Long], <<[String], <<[String], <<[Int]))
   }
   /** Table description of table restaurant_tag. Objects of this class serve as prototypes for rows in queries. */
   class tRestaurantTag(_tableTag: Tag) extends Table[rRestaurantTag](_tableTag, "restaurant_tag") {
-    def * = (id, tagName) <> (rRestaurantTag.tupled, rRestaurantTag.unapply)
+    def * = (id, tagName, englishName, order) <> (rRestaurantTag.tupled, rRestaurantTag.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(tagName)).shaped.<>({r=>import r._; _1.map(_=> rRestaurantTag.tupled((_1.get, _2.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(tagName), Rep.Some(englishName), Rep.Some(order)).shaped.<>({r=>import r._; _1.map(_=> rRestaurantTag.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
     val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
     /** Database column tag_name SqlType(VARCHAR), Length(255,true), Default() */
     val tagName: Rep[String] = column[String]("tag_name", O.Length(255,varying=true), O.Default(""))
+    /** Database column english_name SqlType(VARCHAR), Length(255,true), Default() */
+    val englishName: Rep[String] = column[String]("english_name", O.Length(255,varying=true), O.Default(""))
+    /** Database column order SqlType(INT), Default(0) */
+    val order: Rep[Int] = column[Int]("order", O.Default(0))
   }
   /** Collection-like TableQuery object for table tRestaurantTag */
   lazy val tRestaurantTag = new TableQuery(tag => new tRestaurantTag(tag))

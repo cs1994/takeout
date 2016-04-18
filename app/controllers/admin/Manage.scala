@@ -75,4 +75,38 @@ class Manage  @Inject()(
     }
   }
 
+  def addFoodClassify = adminAuth.async{implicit request=>
+    val postData=request.body.asJson.get
+    val nameCh=(postData \ "nameCh").as[String]
+    val nameEn=(postData \ "nameEn").as[String]
+    val index=(postData \ "index").as[Int]
+
+    adminDao.findResTagByName(nameCh).flatMap { classifyOpt =>
+      if(classifyOpt.isDefined){
+        Future.successful(Ok(AdminErrcode.classifyAlreadyExists))
+      }else{
+        adminDao.createClassify(
+         nameCh,nameEn,index
+        ).map{result=>
+          if(result>0){
+            Ok(success)
+          }else{
+            Ok(AdminErrcode.canNotCreateClassify)
+          }
+        }
+      }
+    }
+  }
+
+  def getAllFoodClassify = adminAuth.async{implicit  request =>
+    adminDao.getAllClassify.map{list=>
+      if(list.nonEmpty){
+        Ok(successResult(Json.obj("result" ->list.map(rRestaurantTag.writes))))
+      }else{
+        Ok(AdminErrcode.getclassifyFail)
+      }
+
+    }
+  }
+
 }

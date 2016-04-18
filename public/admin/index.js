@@ -10,7 +10,9 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import App from './containers/App.js'
 import manageStore from './store/store.js'
-import StoreUserList from './components/storeUser/StoreUserList.js'
+import StoreUserList from './components/StoreUserList.js'
+import AddRestaurant from './components/AddRestaurant.js'
+import ClassifyShow from './components/ClassifyShow.js'
 
 const store = manageStore();
 
@@ -20,6 +22,8 @@ render(
         <Router history={hashHistory}>
             <Route path="/" component={App}>
                 <IndexRoute component={StoreUserList}/>
+                <Route path="/restaurant/add" component={AddRestaurant}/>
+                <Route path="/classify" component={ClassifyShow}/>
             </Route>
         </Router>
     </Provider>,

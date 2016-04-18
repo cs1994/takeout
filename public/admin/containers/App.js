@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import ShanghuHeader from '../components/storeUser/ShanghuHeader.js'
+import ShanghuHeader from '../components/ShanghuHeader.js'
 
 export default class App extends Component {
     componentDidMount() {

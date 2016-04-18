@@ -12,6 +12,9 @@ GET         /takeout/admin                       @controllers.admin.AdminAuth.sy
 POST        /admin/manager/u/add                 @controllers.admin.Manage.addStoreAdmin
 GET         /admin/manager/u/list                @controllers.admin.Manage.listStoreAdmin(page:Int)
 
+POST        /admin/manager/classify/add          @controllers.admin.Manage.addFoodClassify
+GET         /admin/manager/classify/list         @controllers.admin.Manage.getAllFoodClassify
+
 
 
 # Map static resources from the /public folder to the /assets URL path

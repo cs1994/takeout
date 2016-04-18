@@ -9,12 +9,13 @@ import org.slf4j.LoggerFactory
 import play.api.mvc._
 
 @Singleton
-class Application @Inject() (
+class Applications @Inject() (
                               val actionUtils: ActionUtils,
                               val appSettings: AppSettings,
                               system: ActorSystem
                               ) extends Controller {
   import actionUtils._
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   private final val logger = LoggerFactory.getLogger(getClass)
 
@@ -23,6 +24,7 @@ class Application @Inject() (
   {
 
     logger.info("Application init..")
+    println("Application init.. print")
     initFirstAdmin()
 
     //    createUser("test1@test", "1234")

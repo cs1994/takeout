@@ -2,18 +2,18 @@
  * Created by caoshuai on 2016/4/10.
  */
 import { combineReducers } from 'redux'
-import { GET_STORE_ADMIN} from '../actions/storeUser/actions.js'
+import { GET_STORE_ADMIN,GET_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
 
 function manageStorers(state = {}, action) {
     switch (action.type) {
         case GET_STORE_ADMIN:
             return Object.assign({}, state, {
-                storeUserList:action.list
+            storeUserList:action.list
+        });
+        case GET_RESTAURANT_TAG:
+            return Object.assign({}, state, {
+                resTags:action.list
             });
-        //case ADD_SLIDER:
-        //    return Object.assign({}, state, {
-        //        addSliderPic:action.item
-        //    });
         //case DELETE_SLIDER:
         //    return Object.assign({}, state, {
         //        sliderList:action.lists
@@ -38,7 +38,7 @@ function manageStorers(state = {}, action) {
     }
 }
 export const manageApp = combineReducers({
-    manageRestaurants
+    manageStorers
 });
 
 

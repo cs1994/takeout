@@ -1,5 +1,5 @@
 package models.protocols
-import models.protocols.BaseJsonProtocols
+//import models.protocols._
 import models.tables.SlickTables._
 import play.api.libs.json.{JsValue, Json, Writes}
 
@@ -48,6 +48,16 @@ trait AdminProtocols extends BaseJsonProtocols{
         "createTime" -> obj.createTime
       )
     }
+  }
+  implicit  val rRestaurantTag:Writes[rRestaurantTag] = new Writes[rRestaurantTag]{
+  override def writes(obj:rRestaurantTag):JsValue={
+   Json.obj(
+        "id" -> obj.id,
+        "tagName" -> obj.tagName,
+        "englishName" -> obj.englishName,
+        "order" -> obj.order
+      )
+  }
   }
 
 //  implicit val rRestaurantOrder: Writes[rrestaurantorder] = new Writes[rRestaurantOrder] {

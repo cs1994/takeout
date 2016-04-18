@@ -4,9 +4,9 @@
 
 import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
-import Modal from '../../../javascripts/common/modal.js'
-import {isEmail,isStrongPassword} from "../../../javascripts/common/function.js"
-import {addRestaurantUsers} from "../../actions/storeUser/actions.js"
+import Modal from '../../javascripts/common/modal.js'
+import {isEmail,isStrongPassword,timeFormat} from "../../javascripts/common/function.js"
+import {addRestaurantUsers,fetchStoreAdminLists} from "../actions/storeUser/actions.js"
 /**
  * 餐厅主人列表
  * */
@@ -22,6 +22,7 @@ export default class RestaurantList extends Component{
         this.onCheckPwd=this.onCheckPwd.bind(this);
     }
     componentWillMount(){
+        this.props.dispatch(fetchStoreAdminLists(1))
     }
     openModal(){
         this.refs.addStoreUser.open();
@@ -85,34 +86,29 @@ export default class RestaurantList extends Component{
                                 </thead>
                                 <tbody>
                                 {
-                                //    this.state.ShanghuManagerStore.shanghuList.map(function(e, index){
-                                //    //{"id":100004,"email":"shaotianjie@ebupt.com","nickName":"shaotianjie@ebupt.com",
-                                //    // "headImg":"/public/images/defaultHead.jpg","state":1,"userType":2,
-                                //    // "createTime":1451888387294}
-                                //    var stateBtnDom = null;
-                                //    if(e.state == 0){
-                                //        stateBtnDom = <button className="btn btn-success btn-sm" onClick={this.handleClickChangeState.bind(this, e.id, 1)}>启用</button>;
-                                //    }else if(e.state == 1){
-                                //        stateBtnDom = <button className="btn btn-warning btn-sm" onClick={this.handleClickChangeState.bind(this, e.id, 0)}>禁用</button>;
-                                //    }
-                                //    return(
-                                //        <tr key={e.id}>
-                                //            <td>{e.id}</td>
-                                //            <td>{e.email}</td>
-                                //            <td>{e.nickName}</td>
-                                //            <td>{e.state == 1 ? "已启用" : "已禁用"}</td>
-                                //            <td>{RheaUtil.timeFormat(e.createTime)}</td>
-                                //            <td>
-                                //                <button className="btn btn-info btn-sm" onClick={this.handleClickAddRestaurant.bind(this, e.id)}>开餐厅</button>&nbsp;&nbsp;
-                                //                {/*<button className="btn btn-info btn-sm" onClick={this.handleClickAddMall.bind(this, e.id)}>开商铺</button>&nbsp;&nbsp;*/}
-                                //                <button className="btn btn-primary btn-sm" onClick={this.handleClickAddStore.bind(this, e.id)}>开店</button>&nbsp;&nbsp;
-                                //                <button className="btn btn-danger btn-sm" onClick={this.handleRemove.bind(this, e.id)}>删除</button>&nbsp;&nbsp;
-                                //                <button className="btn btn-warning btn-sm" onClick={this.handleResetPwd.bind(this, e.id)}>重置密码</button>&nbsp;&nbsp;
-                                //                {stateBtnDom}
-                                //            </td>
-                                //        </tr>
-                                //    )
-                                //}.bind(this))
+                                    storeUserList.map(function(e, index){
+                                    var stateBtnDom = null;
+                                    if(e.state == 0){
+                                        stateBtnDom = <button className="btn btn-success btn-sm" >启用</button>;
+                                    }else if(e.state == 1){
+                                        stateBtnDom = <button className="btn btn-warning btn-sm" >禁用</button>;
+                                    }
+                                    return(
+                                        <tr key={e.id}>
+                                            <td>{e.id}</td>
+                                            <td>{e.email}</td>
+                                            <td>{e.nickName}</td>
+                                            <td>{e.state == 1 ? "已启用" : "已禁用"}</td>
+                                            <td>{timeFormat(e.createTime)}</td>
+                                            <td>
+                                                <button className="btn btn-info btn-sm" >开餐厅</button>&nbsp;&nbsp;
+                                                <button className="btn btn-danger btn-sm" >删除</button>&nbsp;&nbsp;
+                                                <button className="btn btn-warning btn-sm" >重置密码</button>&nbsp;&nbsp;
+                                                {stateBtnDom}
+                                            </td>
+                                        </tr>
+                                    )
+                                }.bind(this))
                                 }
 
 
@@ -172,7 +168,7 @@ RestaurantList.propTypes = {
 
 function getRestaurantList(state){
     return{
-        storeUserList: state.storeUserList?state.storeUserList:[]
+        storeUserList: state.manageStorers.storeUserList?state.manageStorers.storeUserList:[]
     }
 }
 export default connect(getRestaurantList)(RestaurantList)

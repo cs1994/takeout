@@ -24,8 +24,9 @@ class AdminDao @Inject()(
                           ) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   private final val logger = LoggerFactory.getLogger(getClass)
-  private[this] val user = SlickTables.tUser
+//  private[this] val user = SlickTables.tUser
   private[this] val admin = SlickTables.tAdmin
+  private[this] val restaurantTag = SlickTables.tRestaurantTag
   private final val PAGE_SIZE = 20
 
 
@@ -64,6 +65,10 @@ class AdminDao @Inject()(
       ).mapTo[Long]
     }
   }
+  def createClassify(nameCh:String,nameEn:String,index:Int)={
+    db.run(restaurantTag.map(u=>(u.tagName,u.englishName,u.order)).
+    returning(restaurantTag.map(_.id))+=(nameCh,nameEn,index))
+  }
 
   def getAllAdminNum = {
     db.run(admin.filterNot(_.id===UserConstants.FIRST_ADMIN_ID).length.result)
@@ -78,4 +83,12 @@ class AdminDao @Inject()(
     }
   }
 
+  def findResTagByName(name:String)={
+    db.run(restaurantTag.filter(_.tagName===name).result.headOption)
+  }
+  def getAllClassify={
+    db.run(
+      restaurantTag.sortBy(_.order).result
+    )
+  }
 }

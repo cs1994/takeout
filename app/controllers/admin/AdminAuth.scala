@@ -22,6 +22,7 @@ import scala.concurrent.Future
 @Singleton
 class AdminAuth  @Inject()(
                             adminDao: AdminDao,
+                            application:Applications,
                             val actionUtils: ActionUtils,
                             val appSettings: AppSettings
                             ) extends Controller with AdminProtocols{
@@ -39,6 +40,7 @@ class AdminAuth  @Inject()(
 //    if (request.session.get(SessionKey.userId).isDefined
 //      && request.session.get(SessionKey.uType).isDefined
 //      && request.session.get(SessionKey.uType).get.toInt == UserConstants.UserType.SystemAdmin) {
+//    application.initFirstAdmin()
       val conf = getCustomerConfMap(request)
       Ok(views.html.admin.index(conf))
 //    } else {

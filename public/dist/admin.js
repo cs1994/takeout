@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a1452d0853a1533b4b97"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "be6ce74f3885c37b9e8e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -600,6 +600,14 @@
 
 	var _StoreUserList2 = _interopRequireDefault(_StoreUserList);
 
+	var _AddRestaurant = __webpack_require__(326);
+
+	var _AddRestaurant2 = _interopRequireDefault(_AddRestaurant);
+
+	var _ClassifyShow = __webpack_require__(327);
+
+	var _ClassifyShow2 = _interopRequireDefault(_ClassifyShow);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var store = (0, _store2.default)(); /**
@@ -616,7 +624,9 @@
 	        _react2.default.createElement(
 	            _reactRouter.Route,
 	            { path: '/', component: _App2.default },
-	            _react2.default.createElement(_reactRouter.IndexRoute, { component: _StoreUserList2.default })
+	            _react2.default.createElement(_reactRouter.IndexRoute, { component: _StoreUserList2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: '/restaurant/add', component: _AddRestaurant2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: '/classify', component: _ClassifyShow2.default })
 	        )
 	    )
 	), rootElement);
@@ -12235,6 +12245,15 @@
 	                                    { className: 'nav-link', href: '#' },
 	                                    '餐厅'
 	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'li',
+	                                { className: 'nav-item' },
+	                                _react2.default.createElement(
+	                                    'a',
+	                                    { className: 'nav-link', href: '/takeout/admin#/classify' },
+	                                    '分类'
+	                                )
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -12590,26 +12609,26 @@
 
 	var _redux = __webpack_require__(295);
 
-	__webpack_require__(322);
+	var _actions = __webpack_require__(322);
 
 	/**
 	 * Created by caoshuai on 2016/4/10.
 	 */
 
 
-	function manageRestaurants() {
+	function manageStorers() {
 	    var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	    var action = arguments[1];
 
 	    switch (action.type) {
-	        //case FETCH_SLIDER:
-	        //    return Object.assign({}, state, {
-	        //        storeUserList:action.lists
-	        //    });
-	        //case ADD_SLIDER:
-	        //    return Object.assign({}, state, {
-	        //        addSliderPic:action.item
-	        //    });
+	        case _actions.GET_STORE_ADMIN:
+	            return Object.assign({}, state, {
+	                storeUserList: action.list
+	            });
+	        case _actions.GET_RESTAURANT_TAG:
+	            return Object.assign({}, state, {
+	                resTags: action.list
+	            });
 	        //case DELETE_SLIDER:
 	        //    return Object.assign({}, state, {
 	        //        sliderList:action.lists
@@ -12634,7 +12653,7 @@
 	    }
 	}
 	var manageApp = exports.manageApp = (0, _redux.combineReducers)({
-	    manageRestaurants: manageRestaurants
+	    manageStorers: manageStorers
 	});
 
 	exports.default = manageApp;
@@ -12648,95 +12667,102 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.fetchStoreAdminLists = fetchStoreAdminLists;
 	/**
-	 * Created by caoshuai on 2016/4/4.
+	 * Created by caoshuai on 2016/4/16.
 	 */
 
-	//import {url} from '../../javascripts/conf.js'
-	var GET_STORELIST = exports.GET_STORELIST = 'GET_STORELIST';
+	var GET_STORE_ADMIN = exports.GET_STORE_ADMIN = 'GET_STORE_ADMIN';
+	var GET_RESTAURANT_TAG = exports.GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
 
-	var GET_SLIDERLIST = exports.GET_SLIDERLIST = 'GET_SLIDERLIST';
-	var GET_PRODUCTLIST = exports.GET_PRODUCTLIST = 'GET_PRODUCTLIST';
-	var GET_FOODLIST = exports.GET_FOODLIST = 'GET_FOODLIST';
-	var GET_ADLIST = exports.GET_ADLIST = 'GET_ADLIST';
-	var GET_BULLETIN = exports.GET_BULLETIN = 'GET_BULLETIN';
-	var REQUEST_LISTS = exports.REQUEST_LISTS = 'REQUEST_LISTS';
-	var GET_ALL_BULLETIN = exports.GET_ALL_BULLETIN = 'GET_ALL_BULLETIN';
-
-	function getStoreList(list) {
+	function fetchStoreAdminList(list) {
 	    return {
-	        type: GET_STORELIST,
+	        type: GET_STORE_ADMIN,
 	        list: list
 	    };
 	}
-	function getSliderList(json) {
+	function fetchClassifyList(list) {
 	    return {
-	        type: GET_SLIDERLIST,
-	        lists: json.result
+	        type: GET_RESTAURANT_TAG,
+	        list: list
 	    };
 	}
 
-	function getProductList(json) {
-	    return {
-	        type: GET_PRODUCTLIST,
-	        lists: json
-	    };
-	}
-
-	function getFoodList(json) {
-	    return {
-	        type: GET_FOODLIST,
-	        lists: json
-	    };
-	}
-
-	function getAdList(json) {
-
-	    return {
-	        type: GET_ADLIST,
-	        lists: json.result
-	    };
-	}
-	function getBulletin(json) {
-	    return {
-	        type: GET_BULLETIN,
-	        lists: json.result
-	    };
-	}
-	function getAllBulletin(json) {
-	    return {
-	        type: GET_ALL_BULLETIN,
-	        lists: json.result
-	    };
-	}
-	function requestLists() {
-	    return {
-	        type: REQUEST_LISTS
-	    };
-	}
-
-	function fetchALists() {
+	function fetchStoreAdminLists(page) {
 	    return function (dispatch) {
-	        //console.log("start fetch");
-	        //return fetch('/facew/assemble/getassemble')
-	        //    .then( function(response){
-	        //        return response.json();
-	        //    }).then(function(json){
-	        //        //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
-	        //        if(json.errCode ==0){
-	        //            dispatch(getAdList(json));
-	        //        }
-	        //    }).catch(e => console.log('error = ' + e));
-	    };
-	}
-	var addRestaurantUsers = exports.addRestaurantUsers = function addRestaurantUsers(data) {
-	    return function (dispatch) {
-	        return fetch('/facew/assemble/getassemble').then(function (response) {
+	        return fetch('/admin/manager/u/list?page=' + page, {
+	            credentials: 'include' }).then(function (response) {
 	            return response.json();
 	        }).then(function (json) {
 	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
 	            if (json.errCode == 0) {
-	                dispatch(getAdList(json));
+	                console.log("################### " + JSON.stringify(json.list));
+	                dispatch(fetchStoreAdminList(json.list));
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	}
+	var addRestaurantUsers = exports.addRestaurantUsers = function addRestaurantUsers(data, self) {
+	    return function (dispatch) {
+	        return fetch('/admin/manager/u/add', {
+	            credentials: 'include',
+	            headers: {
+	                'Accept': 'application/json',
+	                'Content-Type': 'application/json'
+	            },
+	            method: 'POST',
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	            if (json.errCode == 0) {
+	                //console.log("################### " +JSON.stringify(json))
+	                //dispatch(getAdList(json));
+	                self.refs.addStoreUser.close();
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
+
+	var fetchAllFoodClassify = exports.fetchAllFoodClassify = function fetchAllFoodClassify() {
+	    return function (dispatch) {
+	        return fetch('/admin/manager/classify/list', {
+	            credentials: 'include' }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	            if (json.errCode == 0) {
+	                console.log("################### " + JSON.stringify(json.result));
+	                dispatch(fetchClassifyList(json.result));
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
+	var addFoodClassifys = exports.addFoodClassifys = function addFoodClassifys(data, self) {
+	    return function (dispatch) {
+	        return fetch('/admin/manager/classify/add', {
+	            credentials: 'include',
+	            headers: {
+	                'Accept': 'application/json',
+	                'Content-Type': 'application/json'
+	            },
+	            method: 'POST',
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	            if (json.errCode == 0) {
+	                //console.log("################### " +JSON.stringify(json))
+	                //dispatch(getAdList(json));
+	                self.refs.addStoreClassify.close();
 	            }
 	        }).catch(function (e) {
 	            return console.log('error = ' + e);
@@ -12768,7 +12794,7 @@
 
 	var _function = __webpack_require__(325);
 
-	var _actions = __webpack_require__(326);
+	var _actions = __webpack_require__(322);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12804,7 +12830,9 @@
 
 	    _createClass(RestaurantList, [{
 	        key: 'componentWillMount',
-	        value: function componentWillMount() {}
+	        value: function componentWillMount() {
+	            this.props.dispatch((0, _actions.fetchStoreAdminLists)(1));
+	        }
 	    }, {
 	        key: 'openModal',
 	        value: function openModal() {
@@ -12919,7 +12947,78 @@
 	                                        )
 	                                    )
 	                                ),
-	                                _react2.default.createElement('tbody', null)
+	                                _react2.default.createElement(
+	                                    'tbody',
+	                                    null,
+	                                    storeUserList.map(function (e, index) {
+	                                        var stateBtnDom = null;
+	                                        if (e.state == 0) {
+	                                            stateBtnDom = _react2.default.createElement(
+	                                                'button',
+	                                                { className: 'btn btn-success btn-sm' },
+	                                                '启用'
+	                                            );
+	                                        } else if (e.state == 1) {
+	                                            stateBtnDom = _react2.default.createElement(
+	                                                'button',
+	                                                { className: 'btn btn-warning btn-sm' },
+	                                                '禁用'
+	                                            );
+	                                        }
+	                                        return _react2.default.createElement(
+	                                            'tr',
+	                                            { key: e.id },
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.id
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.email
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.nickName
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.state == 1 ? "已启用" : "已禁用"
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                (0, _function.timeFormat)(e.createTime)
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-info btn-sm' },
+	                                                    '开餐厅'
+	                                                ),
+	                                                '  ',
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-danger btn-sm' },
+	                                                    '删除'
+	                                                ),
+	                                                '  ',
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-warning btn-sm' },
+	                                                    '重置密码'
+	                                                ),
+	                                                '  ',
+	                                                stateBtnDom
+	                                            )
+	                                        );
+	                                    }.bind(this))
+	                                )
 	                            )
 	                        )
 	                    )
@@ -13015,7 +13114,7 @@
 
 	function getRestaurantList(state) {
 	    return {
-	        storeUserList: state.storeUserList ? state.storeUserList : []
+	        storeUserList: state.manageStorers.storeUserList ? state.manageStorers.storeUserList : []
 	    };
 	}
 	exports.default = (0, _reactRedux.connect)(getRestaurantList)(RestaurantList);
@@ -13154,7 +13253,7 @@
 /* 325 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -13176,71 +13275,619 @@
 	    return reg.test(str);
 	};
 
+	var timeFormat = exports.timeFormat = function timeFormat(timeNum) {
+	    var format = function format(time, _format) {
+	        var t = new Date(time);
+	        var tf = function tf(i) {
+	            return (i < 10 ? '0' : '') + i;
+	        };
+	        return _format.replace(/yyyy|MM|dd|HH|mm|ss/g, function (a) {
+	            switch (a) {
+	                case 'yyyy':
+	                    return tf(t.getFullYear());
+	                    break;
+	                case 'MM':
+	                    return tf(t.getMonth() + 1);
+	                    break;
+	                case 'mm':
+	                    return tf(t.getMinutes());
+	                    break;
+	                case 'dd':
+	                    return tf(t.getDate());
+	                    break;
+	                case 'HH':
+	                    return tf(t.getHours());
+	                    break;
+	                case 'ss':
+	                    return tf(t.getSeconds());
+	                    break;
+	            };
+	        });
+	    };
+
+	    return format(timeNum, 'yyyy-MM-dd HH:mm:ss');
+	};
+
 /***/ },
 /* 326 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _reactRedux = __webpack_require__(305);
+
+	var _react = __webpack_require__(293);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _function = __webpack_require__(325);
+
+	var _actions = __webpack_require__(322);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by caoshuai on 2016/4/18.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	//import Modal from '../../../javascripts/common/modal.js'
+
+
 	/**
-	 * Created by caoshuai on 2016/4/16.
-	 */
-
-	var GET_STORELIST = exports.GET_STORELIST = 'GET_STORELIST';
-
-	function getStoreList(list) {
-	    return {
-	        type: GET_STORELIST,
-	        list: list
-	    };
-	}
-	function getSliderList(json) {
-	    return {
-	        type: GET_SLIDERLIST,
-	        lists: json.result
-	    };
-	}
-
-	function fetchALists() {
-	    return function (dispatch) {
-	        //console.log("start fetch");
-	        //return fetch('/facew/assemble/getassemble')
-	        //    .then( function(response){
-	        //        return response.json();
-	        //    }).then(function(json){
-	        //        //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
-	        //        if(json.errCode ==0){
-	        //            dispatch(getAdList(json));
-	        //        }
-	        //    }).catch(e => console.log('error = ' + e));
-	    };
-	}
-	var addRestaurantUsers = exports.addRestaurantUsers = function addRestaurantUsers(data, self) {
-	    return function (dispatch) {
-	        self.refs.addStoreUser.close();
-	        //    return fetch('/admin/manager/u/add', {
-	        //        credentials:'include',
-	        //        headers:{
-	        //            'Accept': 'application/json',
-	        //            'Content-Type': 'application/json'
-	        //        },
-	        //        method:'POST',
-	        //        body:JSON.stringify(data)
-	        //    })
-	        //        .then( function(response){
-	        //            return response.json();
-	        //        }).then(function(json){
-	        //            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
-	        //            if(json.errCode ==0){
-	        //                //dispatch(getAdList(json));
-	        //
-	        //            }
-	        //        }).catch(e => console.log('error = ' + e));
-	    };
+	 * 餐厅主人列表
+	 * */
+	var contextTypes = {
+	    router: _react2.default.PropTypes.object
 	};
+
+	var AddRestaurant = function (_Component) {
+	    _inherits(AddRestaurant, _Component);
+
+	    function AddRestaurant(props) {
+	        _classCallCheck(this, AddRestaurant);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AddRestaurant).call(this, props));
+
+	        _this.openModal = _this.openModal.bind(_this);
+	        _this.onConfirm = _this.onConfirm.bind(_this);
+	        _this.checkEmail = _this.checkEmail.bind(_this);
+	        _this.onCheckPwd = _this.onCheckPwd.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(AddRestaurant, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.props.dispatch((0, _actions.fetchStoreAdminLists)(1));
+	        }
+	    }, {
+	        key: 'openModal',
+	        value: function openModal() {
+	            this.refs.addStoreUser.open();
+	        }
+	    }, {
+	        key: 'onConfirm',
+	        value: function onConfirm() {
+	            var email = $('#email').val();
+	            var password = $('#password').val();
+	            var secondPwd = $('#secondPwd').val();
+
+	            if (!(0, _function.isEmail)(email)) {
+	                toastr.warning("邮箱格式不正确");
+	                return;
+	            }
+
+	            if (password != secondPwd) {
+	                toastr.warning("两次密码输入不一致");
+	                return;
+	            } else if (!(0, _function.isStrongPassword)(password)) {
+	                toastr.warning("密码格式不正确");
+	                return;
+	            }
+	            var postData = { email: email, password: password };
+	            console.log("$$$$ " + JSON.stringify(postData));
+	            this.props.dispatch((0, _actions.addRestaurantUsers)(postData, this));
+	        }
+	    }, {
+	        key: 'checkEmail',
+	        value: function checkEmail() {
+	            var email = $('#email').val();
+	            if (!(0, _function.isEmail)(email)) {
+	                toastr.warning("邮箱格式不正确");
+	            }
+	        }
+	    }, {
+	        key: 'onCheckPwd',
+	        value: function onCheckPwd() {
+	            var pwd = $('#password').val();
+	            if (!(0, _function.isStrongPassword)(pwd)) {
+	                toastr.warning("密码格式不正确");
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var storeUserList = this.props.storeUserList;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'RestaurantAdd' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'container' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'row' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-sm-12 col-md-6 col-md-offset-3' },
+	                            _react2.default.createElement(
+	                                'form',
+	                                { id: 'newDishForm' },
+	                                _react2.default.createElement(
+	                                    'fieldset',
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { id: 'legend', className: '' },
+	                                        _react2.default.createElement(
+	                                            'legend',
+	                                            { className: '' },
+	                                            '新建餐厅'
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'category' },
+	                                            '所属类别(必填)'
+	                                        ),
+	                                        _react2.default.createElement('select', { className: 'form-control', id: 'category', name: 'category' }),
+	                                        _react2.default.createElement(
+	                                            'p',
+	                                            { className: 'help-block' },
+	                                            '餐厅主营归类'
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'dishName' },
+	                                            '名称(必填, 20字以内)'
+	                                        ),
+	                                        _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'name',
+	                                            name: 'name', placeholder: '', maxLength: '20' }),
+	                                        _react2.default.createElement(
+	                                            'p',
+	                                            { className: 'help-block' },
+	                                            '一个好的名字有利于顾客记住'
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'dishPic' },
+	                                            'Logo图片(必填,',
+	                                            "<",
+	                                            '1M)'
+	                                        ),
+	                                        _react2.default.createElement('input', { type: 'file', id: 'picURLInput' }),
+	                                        _react2.default.createElement('img', { id: 'picURLImg', src: '', alt: '', width: '100', height: '100' }),
+	                                        _react2.default.createElement(
+	                                            'p',
+	                                            { className: 'help-block' },
+	                                            '此图将作为餐厅的Logo, 最佳尺寸:宽高比1:1, 推荐100px*100px'
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'address' },
+	                                            '地址(必填, 50字以内)'
+	                                        ),
+	                                        _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'address',
+	                                            name: 'address', placeholder: '', maxLength: '50' }),
+	                                        _react2.default.createElement('p', { className: 'help-block' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'tel' },
+	                                            '联系电话(必填)'
+	                                        ),
+	                                        _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'tel',
+	                                            name: 'tel', placeholder: '', maxLength: '50' }),
+	                                        _react2.default.createElement('p', { className: 'help-block' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'dishDesc' },
+	                                            '简介(必填, 500字以内)'
+	                                        ),
+	                                        _react2.default.createElement('textarea', { type: 'text', className: 'form-control', id: 'description',
+	                                            name: 'description', maxLength: '500', rows: '5', placeholder: '' }),
+	                                        _react2.default.createElement(
+	                                            'p',
+	                                            { className: 'help-block' },
+	                                            '对此餐厅的简单的描述,来让顾客快速了解该餐厅'
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'basePrice' },
+	                                            '起送价(必填)'
+	                                        ),
+	                                        _react2.default.createElement('input', { type: 'number', className: 'form-control', id: 'basePrice',
+	                                            name: 'basePrice', placeholder: '' }),
+	                                        _react2.default.createElement('p', { className: 'help-block' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'packFee' },
+	                                            '配送费(必填)'
+	                                        ),
+	                                        _react2.default.createElement('input', { type: 'number', className: 'form-control', id: 'packFee',
+	                                            name: 'packFee', placeholder: '' }),
+	                                        _react2.default.createElement('p', { className: 'help-block' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement(
+	                                            'label',
+	                                            { 'for': 'duringTime' },
+	                                            '平均送达时间(必填,单位:分钟)'
+	                                        ),
+	                                        _react2.default.createElement('input', { type: 'number', className: 'form-control', id: 'duringTime',
+	                                            name: 'duringTime', placeholder: '' }),
+	                                        _react2.default.createElement(
+	                                            'p',
+	                                            { className: 'help-block' },
+	                                            '从接单到送到客户手中的平均所用时间'
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'button',
+	                                        { type: 'submit', className: 'btn btn-success btn-block'
+	                                        },
+	                                        '提交'
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return AddRestaurant;
+	}(_react.Component);
+
+	exports.default = AddRestaurant;
+
+	AddRestaurant.contextTypes = contextTypes;
+	AddRestaurant.propTypes = {
+	    storeUserList: _react.PropTypes.array.isRequired,
+	    dispatch: _react.PropTypes.func.isRequired
+	};
+
+	function getRestaurantList(state) {
+	    return {
+	        storeUserList: state.manageStorers.storeUserList ? state.manageStorers.storeUserList : []
+	    };
+	}
+	exports.default = (0, _reactRedux.connect)(getRestaurantList)(AddRestaurant);
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _reactRedux = __webpack_require__(305);
+
+	var _react = __webpack_require__(293);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _modal = __webpack_require__(324);
+
+	var _modal2 = _interopRequireDefault(_modal);
+
+	var _function = __webpack_require__(325);
+
+	var _actions = __webpack_require__(322);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by caoshuai on 2016/4/18.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	/**
+	 * 餐厅主人列表
+	 * */
+	var contextTypes = {
+	    router: _react2.default.PropTypes.object
+	};
+
+	var ClassifyShow = function (_Component) {
+	    _inherits(ClassifyShow, _Component);
+
+	    function ClassifyShow(props) {
+	        _classCallCheck(this, ClassifyShow);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ClassifyShow).call(this, props));
+
+	        _this.openModal = _this.openModal.bind(_this);
+	        _this.onConfirm = _this.onConfirm.bind(_this);
+
+	        return _this;
+	    }
+
+	    _createClass(ClassifyShow, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.props.dispatch((0, _actions.fetchAllFoodClassify)());
+	        }
+	    }, {
+	        key: 'openModal',
+	        value: function openModal() {
+	            this.refs.addStoreClassify.open();
+	        }
+	    }, {
+	        key: 'onConfirm',
+	        value: function onConfirm() {
+	            var nameCh = $('#nameCh').val();
+	            var nameEn = $('#nameEn').val();
+	            var index = $('#index').val();
+
+	            if (nameCh == "" || nameEn == "" || index == "") {
+	                toastr.warning("请填写完整");
+	                return;
+	            }
+	            var postData = { nameCh: nameCh, nameEn: nameEn, index: parseInt(index) };
+	            console.log("$$$$ " + JSON.stringify(postData));
+	            this.props.dispatch((0, _actions.addFoodClassifys)(postData, this));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var resTags = this.props.resTags;
+
+	            console.log("@@@@@@@@@@@@@@@ " + JSON.stringify(resTags));
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'ShanghuManagerHome', style: { marginTop: "20px" } },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'container' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'row' },
+	                        _react2.default.createElement(
+	                            'button',
+	                            { className: 'btn btn-success', onClick: this.openModal },
+	                            _react2.default.createElement('i', { className: 'fa fa-plus' }),
+	                            '添加分类'
+	                        )
+	                    ),
+	                    _react2.default.createElement('br', null),
+	                    _react2.default.createElement('br', null),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'row' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-sm-12' },
+	                            _react2.default.createElement(
+	                                'table',
+	                                { className: 'table table-striped table-condensed' },
+	                                _react2.default.createElement(
+	                                    'thead',
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        'tr',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            'ID'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '中文名称'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '英文名称'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '顺序'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '操作'
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'tbody',
+	                                    null,
+	                                    resTags.map(function (e, index) {
+	                                        return _react2.default.createElement(
+	                                            'tr',
+	                                            { key: e.id },
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.id
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.tagName
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.englishName
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.order
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-info btn-sm' },
+	                                                    '修改'
+	                                                ),
+	                                                '  ',
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-danger btn-sm' },
+	                                                    '删除'
+	                                                ),
+	                                                '  '
+	                                            )
+	                                        );
+	                                    }.bind(this))
+	                                )
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-6 col-sm-offset-3' },
+	                        _react2.default.createElement('div', { id: 'pagination' })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _modal2.default,
+	                    { ref: 'addStoreClassify', title: '添加分类', Id: 'addStoreClassify', onConfirm: this.onConfirm },
+	                    _react2.default.createElement(
+	                        'form',
+	                        { id: 'newCateForm' },
+	                        _react2.default.createElement(
+	                            'fieldset',
+	                            null,
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { 'for': 'nameCh' },
+	                                    ' 中文名称(必填)'
+	                                ),
+	                                _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'nameCh',
+	                                    name: 'nameCh', maxLength: '100', placeholder: '' }),
+	                                _react2.default.createElement('p', { className: 'help-block' })
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { 'for': 'nameEn' },
+	                                    ' 英文名称'
+	                                ),
+	                                _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'nameEn',
+	                                    name: 'nameEn', maxLength: '100', placeholder: '' }),
+	                                _react2.default.createElement('p', { className: 'help-block' })
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'form-group' },
+	                                _react2.default.createElement(
+	                                    'label',
+	                                    { 'for': 'index' },
+	                                    '顺序'
+	                                ),
+	                                _react2.default.createElement('input', { type: 'number', className: 'form-control', id: 'index',
+	                                    name: 'index', maxLength: '10', placeholder: '' }),
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    { className: 'help-block' },
+	                                    '用于排序,序号越小,排序越靠前;如不填index值默认为100,'
+	                                )
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ClassifyShow;
+	}(_react.Component);
+
+	exports.default = ClassifyShow;
+
+	ClassifyShow.contextTypes = contextTypes;
+	ClassifyShow.propTypes = {
+	    resTags: _react.PropTypes.array.isRequired,
+	    dispatch: _react.PropTypes.func.isRequired
+	};
+
+	function getRestaurantList(state) {
+	    return {
+	        resTags: state.manageStorers.resTags ? state.manageStorers.resTags : []
+	    };
+	}
+	exports.default = (0, _reactRedux.connect)(getRestaurantList)(ClassifyShow);
 
 /***/ }
 /******/ ]);

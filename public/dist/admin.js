@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bfcdbe8c807a211af970"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "78a470335f3930d2c3cf"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12630,6 +12630,10 @@
 	                storeUserList: [{ id: action.id, email: action.data.email, nickName: action.data.email,
 	                    headImg: "", state: 1, userType: 2, createTime: action.time }].concat(_toConsumableArray(state.storeUserList))
 	            });
+	        case _actions.CHANGE_STORE_ADMIN_STATE:
+	            return Object.assign({}, state, {
+	                storeUserList: [].concat(_toConsumableArray(state.storeUserList.slice(0, action.index)), [Object.assign({}, state.storeUserList[action.index], { state: action.state })], _toConsumableArray(state.storeUserList.slice(action.index + 1)))
+	            });
 	        case _actions.GET_RESTAURANT_TAG:
 	            return Object.assign({}, state, {
 	                resTags: action.list
@@ -12697,6 +12701,7 @@
 
 	var GET_STORE_ADMIN = exports.GET_STORE_ADMIN = 'GET_STORE_ADMIN';
 	var ADD_STORE_ADMIN = exports.ADD_STORE_ADMIN = 'ADD_STORE_ADMIN';
+	var CHANGE_STORE_ADMIN_STATE = exports.CHANGE_STORE_ADMIN_STATE = 'CHANGE_STORE_ADMIN_STATE';
 	var GET_RESTAURANT_TAG = exports.GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
 	var ADD_RESTAURANT_TAG = exports.ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
 	var UPDATE_RESTAURANT_TAG = exports.UPDATE_RESTAURANT_TAG = 'UPDATE_RESTAURANT_TAG';
@@ -12710,6 +12715,9 @@
 	}
 	function addStoreAdmin(data, id, time) {
 	    return { type: ADD_STORE_ADMIN, data: data, id: id, time: time };
+	}
+	function changeStoreAdminState(index, state) {
+	    return { type: CHANGE_STORE_ADMIN_STATE, index: index, state: state };
 	}
 	function fetchClassifyList(list) {
 	    return {
@@ -12766,6 +12774,20 @@
 	        }).catch(function (e) {
 	            return console.log('error = ' + e);
 	        });
+	    };
+	};
+	var changeResUserState = exports.changeResUserState = function changeResUserState(id, index, state) {
+	    return function (dispatch) {
+	        dispatch(changeStoreAdminState(index, state));
+
+	        //return fetch('/admin/manager/u/add',{credentials:'include'})
+	        //    .then( function(response){
+	        //        return response.json();
+	        //    }).then(function(json){
+	        //        if(json.errCode ==0){
+	        //            dispatch(changeStoreAdminState(index,state))
+	        //        }
+	        //    }).catch(e => console.log('error = ' + e));
 	    };
 	};
 
@@ -12956,10 +12978,29 @@
 	            }
 	        }
 	    }, {
+	        key: 'changeStoreUserState',
+	        value: function changeStoreUserState(id, index, state) {
+	            var self = this;
+	            if (state == 0) {
+	                swal({
+	                    title: "确定要禁用吗?",
+	                    text: "",
+	                    type: "warning",
+	                    showCancelButton: true,
+	                    confirmButtonColor: "#DD6B55",
+	                    confirmButtonText: "禁用",
+	                    cancelButtonText: "取消"
+	                }, function () {
+	                    self.props.dispatch((0, _actions.changeResUserState)(id, index, state));
+	                });
+	            } else self.props.dispatch((0, _actions.changeResUserState)(id, index, state));
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var storeUserList = this.props.storeUserList;
 
+	            console.log("!!!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(storeUserList));
 	            return _react2.default.createElement(
 	                'div',
 	                { id: 'ShanghuManagerHome', style: { marginTop: "20px" } },
@@ -13033,13 +13074,13 @@
 	                                        if (e.state == 0) {
 	                                            stateBtnDom = _react2.default.createElement(
 	                                                'button',
-	                                                { className: 'btn btn-success btn-sm' },
+	                                                { className: 'btn btn-success btn-sm', onClick: this.changeStoreUserState.bind(this, e.id, index, 1) },
 	                                                '启用'
 	                                            );
 	                                        } else if (e.state == 1) {
 	                                            stateBtnDom = _react2.default.createElement(
 	                                                'button',
-	                                                { className: 'btn btn-warning btn-sm' },
+	                                                { className: 'btn btn-warning btn-sm', onClick: this.changeStoreUserState.bind(this, e.id, index, 0) },
 	                                                '禁用'
 	                                            );
 	                                        }

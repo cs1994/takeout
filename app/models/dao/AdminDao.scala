@@ -28,7 +28,7 @@ class AdminDao @Inject()(
 //  private[this] val user = SlickTables.tUser
   private[this] val admin = SlickTables.tAdmin
   private[this] val restaurantTag = SlickTables.tRestaurantTag
-  private final val PAGE_SIZE = 20
+  private final val PAGE_SIZE = 10
 
 
   def findById(uid:Long) = db.run{

@@ -4,6 +4,7 @@
 
 export const GET_STORE_ADMIN = 'GET_STORE_ADMIN';
 export const ADD_STORE_ADMIN = 'ADD_STORE_ADMIN';
+export const CHANGE_STORE_ADMIN_STATE = 'CHANGE_STORE_ADMIN_STATE';
 export const GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
 export const ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
 export const UPDATE_RESTAURANT_TAG = 'UPDATE_RESTAURANT_TAG';
@@ -18,6 +19,9 @@ function fetchStoreAdminList(list) {
 }
 function addStoreAdmin(data,id,time){
     return{type: ADD_STORE_ADMIN,data:data,id:id,time:time}
+}
+function changeStoreAdminState(index,state){
+    return{type:CHANGE_STORE_ADMIN_STATE,index:index,state:state}
 }
 function fetchClassifyList(list) {
     return {
@@ -72,6 +76,20 @@ export const addRestaurantUsers =(data,self)=>{
                     self.refs.addStoreUser.close();
                 }
             }).catch(e => console.log('error = ' + e));
+    }
+}
+export const changeResUserState=(id,index,state)=>{
+    return dispatch => {
+        dispatch(changeStoreAdminState(index,state))
+
+        //return fetch('/admin/manager/u/add',{credentials:'include'})
+        //    .then( function(response){
+        //        return response.json();
+        //    }).then(function(json){
+        //        if(json.errCode ==0){
+        //            dispatch(changeStoreAdminState(index,state))
+        //        }
+        //    }).catch(e => console.log('error = ' + e));
     }
 }
 

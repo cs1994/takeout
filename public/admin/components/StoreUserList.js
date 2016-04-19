@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 import Modal from '../../javascripts/common/modal.js'
 import {isEmail,isStrongPassword,timeFormat} from "../../javascripts/common/function.js"
-import {addRestaurantUsers,fetchStoreAdminLists} from "../actions/storeUser/actions.js"
+import {addRestaurantUsers,fetchStoreAdminLists,changeResUserState} from "../actions/storeUser/actions.js"
 /**
  * 餐厅主人列表
  * */
@@ -60,8 +60,26 @@ export default class RestaurantList extends Component{
             toastr.warning("密码格式不正确");
         }
     }
+    changeStoreUserState(id,index,state){
+        var self =this;
+        if(state == 0){
+            swal({
+                title: "确定要禁用吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "禁用",
+                cancelButtonText: "取消"
+            }, function () {
+                self.props.dispatch(changeResUserState(id,index,state))
+            });
+        }else self.props.dispatch(changeResUserState(id,index,state))
+
+    }
     render(){
         const {storeUserList} = this.props;
+        console.log("!!!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(storeUserList))
         return(
             <div id="ShanghuManagerHome" style={{marginTop:"20px"}}>
                 <div className="container">
@@ -89,9 +107,9 @@ export default class RestaurantList extends Component{
                                     storeUserList.map(function(e, index){
                                     var stateBtnDom = null;
                                     if(e.state == 0){
-                                        stateBtnDom = <button className="btn btn-success btn-sm" >启用</button>;
+                                        stateBtnDom = <button className="btn btn-success btn-sm" onClick={this.changeStoreUserState.bind(this,e.id,index,1)}>启用</button>;
                                     }else if(e.state == 1){
-                                        stateBtnDom = <button className="btn btn-warning btn-sm" >禁用</button>;
+                                        stateBtnDom = <button className="btn btn-warning btn-sm" onClick={this.changeStoreUserState.bind(this,e.id,index,0)}>禁用</button>;
                                     }
                                     return(
                                         <tr key={e.id}>

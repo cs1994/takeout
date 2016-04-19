@@ -66,6 +66,12 @@ class AdminDao @Inject()(
       ).mapTo[Long]
     }
   }
+  def updateUserState(id:Long,state:Int)={
+    db.run(admin.filter(_.id===id).map(_.state).update(state))
+  }
+  def deleteStoreUser(id:Long)={
+    db.run(admin.filter(_.id===id).delete)
+  }
   def createClassify(nameCh:String,nameEn:String,index:Int)={
     db.run(restaurantTag.map(u=>(u.tagName,u.englishName,u.order)).
     returning(restaurantTag.map(_.id))+=(nameCh,nameEn,index))

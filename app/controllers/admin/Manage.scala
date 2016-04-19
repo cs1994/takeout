@@ -62,8 +62,6 @@ class Manage  @Inject()(
         }
       }
     }
-
-
   }
 
   def listStoreAdmin(page:Int=1) = adminAuth.async{
@@ -72,6 +70,28 @@ class Manage  @Inject()(
     adminDao.listByPage(newPage).map{
       case(totalPage,admins)=>
         Ok(successResult(Json.obj("total"->totalPage,"cur"->newPage,"list"->admins.map(rUAdminWriter.writes))))
+    }
+  }
+  def changeStoreAdminState(id:Long,state:Int) = adminAuth.async{
+    if(state==UserState.disable || state==UserState.enable){
+      adminDao.updateUserState(id,state).map{num=>
+        if(num>0){
+          Ok(success)
+        }else{
+          Ok(AdminErrcode.updateUserStateFail)
+        }
+      }
+    }else{
+      Future.successful(Ok(AdminErrcode.invalidUserState))
+    }
+  }
+
+  def deleteStoreAdmin(id:Long)=adminAuth.async{
+    adminDao.deleteStoreUser(id).map{num=>
+      if(num>0)
+        Ok(success)
+      else
+        Ok(AdminErrcode.deleteStoreAdminFail)
     }
   }
 

@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "78a470335f3930d2c3cf"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6bc6c8fa9440f3afd7bf"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12634,6 +12634,10 @@
 	            return Object.assign({}, state, {
 	                storeUserList: [].concat(_toConsumableArray(state.storeUserList.slice(0, action.index)), [Object.assign({}, state.storeUserList[action.index], { state: action.state })], _toConsumableArray(state.storeUserList.slice(action.index + 1)))
 	            });
+	        case _actions.DELETE_STORE_ADMIN:
+	            return Object.assign({}, state, {
+	                storeUserList: [].concat(_toConsumableArray(state.storeUserList.slice(0, action.index)), _toConsumableArray(state.storeUserList.slice(action.index + 1)))
+	            });
 	        case _actions.GET_RESTAURANT_TAG:
 	            return Object.assign({}, state, {
 	                resTags: action.list
@@ -12702,6 +12706,7 @@
 	var GET_STORE_ADMIN = exports.GET_STORE_ADMIN = 'GET_STORE_ADMIN';
 	var ADD_STORE_ADMIN = exports.ADD_STORE_ADMIN = 'ADD_STORE_ADMIN';
 	var CHANGE_STORE_ADMIN_STATE = exports.CHANGE_STORE_ADMIN_STATE = 'CHANGE_STORE_ADMIN_STATE';
+	var DELETE_STORE_ADMIN = exports.DELETE_STORE_ADMIN = 'DELETE_STORE_ADMIN';
 	var GET_RESTAURANT_TAG = exports.GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
 	var ADD_RESTAURANT_TAG = exports.ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
 	var UPDATE_RESTAURANT_TAG = exports.UPDATE_RESTAURANT_TAG = 'UPDATE_RESTAURANT_TAG';
@@ -12718,6 +12723,9 @@
 	}
 	function changeStoreAdminState(index, state) {
 	    return { type: CHANGE_STORE_ADMIN_STATE, index: index, state: state };
+	}
+	function deleteStoreAdmin(index) {
+	    return { type: DELETE_STORE_ADMIN, index: index };
 	}
 	function fetchClassifyList(list) {
 	    return {
@@ -12778,16 +12786,28 @@
 	};
 	var changeResUserState = exports.changeResUserState = function changeResUserState(id, index, state) {
 	    return function (dispatch) {
-	        dispatch(changeStoreAdminState(index, state));
-
-	        //return fetch('/admin/manager/u/add',{credentials:'include'})
-	        //    .then( function(response){
-	        //        return response.json();
-	        //    }).then(function(json){
-	        //        if(json.errCode ==0){
-	        //            dispatch(changeStoreAdminState(index,state))
-	        //        }
-	        //    }).catch(e => console.log('error = ' + e));
+	        return fetch('/admin/manager/u/state/change?id=' + id + "&state=" + state, { credentials: 'include' }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            if (json.errCode == 0) {
+	                dispatch(changeStoreAdminState(index, state));
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
+	var deleteResUser = exports.deleteResUser = function deleteResUser(id, index) {
+	    return function (dispatch) {
+	        return fetch('/admin/manager/u/delete?id=' + id, { credentials: 'include' }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            if (json.errCode == 0) {
+	                dispatch(deleteStoreAdmin(index));
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
 	    };
 	};
 
@@ -12996,6 +13016,22 @@
 	            } else self.props.dispatch((0, _actions.changeResUserState)(id, index, state));
 	        }
 	    }, {
+	        key: 'deleteStoreUser',
+	        value: function deleteStoreUser(id, index) {
+	            var self = this;
+	            swal({
+	                title: "确定要删除吗?",
+	                text: "",
+	                type: "warning",
+	                showCancelButton: true,
+	                confirmButtonColor: "#DD6B55",
+	                confirmButtonText: "确认",
+	                cancelButtonText: "取消"
+	            }, function () {
+	                self.props.dispatch((0, _actions.deleteResUser)(id, index));
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var storeUserList = this.props.storeUserList;
@@ -13123,7 +13159,7 @@
 	                                                '  ',
 	                                                _react2.default.createElement(
 	                                                    'button',
-	                                                    { className: 'btn btn-danger btn-sm' },
+	                                                    { className: 'btn btn-danger btn-sm', onClick: this.deleteStoreUser.bind(this, e.id, index) },
 	                                                    '删除'
 	                                                ),
 	                                                '  ',

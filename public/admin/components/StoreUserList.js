@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 import Modal from '../../javascripts/common/modal.js'
 import {isEmail,isStrongPassword,timeFormat} from "../../javascripts/common/function.js"
-import {addRestaurantUsers,fetchStoreAdminLists,changeResUserState} from "../actions/storeUser/actions.js"
+import {addRestaurantUsers,fetchStoreAdminLists,changeResUserState,deleteResUser} from "../actions/storeUser/actions.js"
 /**
  * 餐厅主人列表
  * */
@@ -77,6 +77,20 @@ export default class RestaurantList extends Component{
         }else self.props.dispatch(changeResUserState(id,index,state))
 
     }
+    deleteStoreUser(id,index){
+        const self =this;
+        swal({
+            title: "确定要删除吗?",
+            text: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确认",
+            cancelButtonText: "取消"
+        }, function () {
+            self.props.dispatch(deleteResUser(id,index))
+        });
+    }
     render(){
         const {storeUserList} = this.props;
         console.log("!!!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(storeUserList))
@@ -120,7 +134,7 @@ export default class RestaurantList extends Component{
                                             <td>{timeFormat(e.createTime)}</td>
                                             <td>
                                                 <button className="btn btn-info btn-sm" >开餐厅</button>&nbsp;&nbsp;
-                                                <button className="btn btn-danger btn-sm" >删除</button>&nbsp;&nbsp;
+                                                <button className="btn btn-danger btn-sm" onClick={this.deleteStoreUser.bind(this,e.id,index)}>删除</button>&nbsp;&nbsp;
                                                 <button className="btn btn-warning btn-sm" >重置密码</button>&nbsp;&nbsp;
                                                 {stateBtnDom}
                                             </td>

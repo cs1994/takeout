@@ -2,8 +2,8 @@
  * Created by caoshuai on 2016/4/10.
  */
 import { combineReducers } from 'redux'
-import { GET_STORE_ADMIN,ADD_STORE_ADMIN,CHANGE_STORE_ADMIN_STATE,GET_RESTAURANT_TAG,ADD_RESTAURANT_TAG,
-    UPDATE_RESTAURANT_TAG,DELETE_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
+import { GET_STORE_ADMIN,ADD_STORE_ADMIN,CHANGE_STORE_ADMIN_STATE,GET_RESTAURANT_TAG,DELETE_STORE_ADMIN,
+    ADD_RESTAURANT_TAG,UPDATE_RESTAURANT_TAG,DELETE_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
 
 function manageStorers(state = {}, action) {
     switch (action.type) {
@@ -22,6 +22,11 @@ function manageStorers(state = {}, action) {
                 Object.assign({},state.storeUserList[action.index],{state:action.state}),
                     ...state.storeUserList.slice(action.index+1)
                 ]
+            });
+        case DELETE_STORE_ADMIN:
+            return Object.assign({}, state, {
+                storeUserList:[...state.storeUserList.slice(0,action.index),
+                    ...state.storeUserList.slice(action.index+1)]
             });
         case GET_RESTAURANT_TAG:
             return Object.assign({}, state, {

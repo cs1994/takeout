@@ -11,6 +11,8 @@
 GET         /takeout/admin                       @controllers.admin.AdminAuth.sysIndex
 POST        /admin/manager/u/add                 @controllers.admin.Manage.addStoreAdmin
 GET         /admin/manager/u/list                @controllers.admin.Manage.listStoreAdmin(page:Int)
+GET         /admin/manager/u/state/change        @controllers.admin.Manage.changeStoreAdminState(id:Long,state:Int)
+GET         /admin/manager/u/delete              @controllers.admin.Manage.deleteStoreAdmin(id:Long)
 
 POST        /admin/manager/classify/add          @controllers.admin.Manage.addFoodClassify
 GET         /admin/manager/classify/list         @controllers.admin.Manage.getAllFoodClassify

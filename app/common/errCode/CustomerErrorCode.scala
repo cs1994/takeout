@@ -33,10 +33,4 @@ object CustomerErrorCode extends BaseJsonProtocols{
   def updatePwdFail = jsonResult(1004019,"update password fail.")
   def resetPwdFail = jsonResult(1004020,"reset password fail.")
 
-  def leaveMessageFailed=jsonResult(1004030,"leave message failed")
-  def deleteMessageFailed=jsonResult(1004031,"delete message failed")
-  def msgNotExist=jsonResult(1004032,"the message doesn't exist")
-  def userForbid =jsonResult(1004033,"该用户已被禁言!")
-  def leaveMsgFrequent=jsonResult(1004034,"请不要在10s内重复留言！")
-
 }

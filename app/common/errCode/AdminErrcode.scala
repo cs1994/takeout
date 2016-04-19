@@ -11,6 +11,9 @@ object AdminErrcode extends BaseJsonProtocols{
   def updateClassifyFail = jsonResult(1002004,"update classify fail!")
   def resTagNotExits = jsonResult(1002005,"classify not exits!")
   def deleteResTagFail = jsonResult(1002006,"delete restaurang tag fail!")
+  def updateUserStateFail = jsonResult(1002007,"update state fail!")
+  def invalidUserState = jsonResult(1002008,"invalid user state!")
+  def deleteStoreAdminFail = jsonResult(1002009,"delete store admin fail!")
 
 
 }

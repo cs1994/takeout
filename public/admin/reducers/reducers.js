@@ -3,7 +3,7 @@
  */
 import { combineReducers } from 'redux'
 import { GET_STORE_ADMIN,ADD_STORE_ADMIN,CHANGE_STORE_ADMIN_STATE,GET_RESTAURANT_TAG,DELETE_STORE_ADMIN,
-    ADD_RESTAURANT_TAG,UPDATE_RESTAURANT_TAG,DELETE_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
+    ADD_RESTAURANT_TAG,UPDATE_RESTAURANT_TAG,DELETE_RESTAURANT_TAG,GET_RESTAURANT_LIST} from '../actions/storeUser/actions.js'
 
 function manageStorers(state = {}, action) {
     switch (action.type) {
@@ -48,29 +48,10 @@ function manageStorers(state = {}, action) {
                 resTags:[...state.resTags.slice(0,action.index),
                    ...state.resTags.slice(action.index+1)]
             });
-        //case GET_RESTAURANT_TAG_DETAIL:
-        //    return Object.assign({}, state, {
-        //        classifyDetail:state.resTags[index]
-        //    });
-        //case DELETE_SLIDER:
-        //    return Object.assign({}, state, {
-        //        sliderList:action.lists
-        //    });
-        //case CHANGE_SLIDER_ORDER:
-        //    return Object.assign({}, state, {
-        //        sliderList:[
-        //            ...state.sliderList.slice(0, action.index-1),
-        //            Object.assign({},state.sliderList[action.index],{order:state.sliderList[action.index-1].order}),
-        //            Object.assign({},state.sliderList[action.index-1],{order:state.sliderList[action.index].order}),
-        //            //state.sliderList[action.index],
-        //            //state.sliderList[action.index-1],
-        //            ...state.sliderList.slice(action.index + 1)
-        //        ]
-        //    });
-        //case GET_SLIDER_DETAIL:
-        //    return Object.assign({},state,{
-        //        sliderDetail:action.detail
-        //    })
+       case GET_RESTAURANT_LIST:
+           Object.assign({}, state, {
+               resList:action.list
+           });
         default:
             return state
     }

@@ -5,8 +5,9 @@
 import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 //import Modal from '../../../javascripts/common/modal.js'
-import {isEmail,isStrongPassword,timeFormat} from "../../javascripts/common/function.js"
-import {addRestaurantUsers,fetchStoreAdminLists} from "../actions/storeUser/actions.js"
+import {isAllowedPic,getFormJson} from "../../javascripts/common/function.js"
+import {addRestaurant,fetchAllFoodClassify} from "../actions/storeUser/actions.js"
+
 /**
  * 餐厅主人列表
  * */
@@ -16,52 +17,78 @@ const contextTypes =  {
 export default class AddRestaurant extends Component{
     constructor(props) {
         super(props);
-        this.openModal=this.openModal.bind(this);
-        this.onConfirm=this.onConfirm.bind(this);
-        this.checkEmail=this.checkEmail.bind(this);
-        this.onCheckPwd=this.onCheckPwd.bind(this);
+        this.submit=this.submit.bind(this);
     }
     componentWillMount(){
-        this.props.dispatch(fetchStoreAdminLists(1))
+        this.props.dispatch(fetchAllFoodClassify())
     }
-    openModal(){
-        this.refs.addStoreUser.open();
-    }
-    onConfirm(){
-        var email = $('#email').val();
-        var password = $('#password').val();
-        var secondPwd = $('#secondPwd').val();
+    handlePicFileChange(e){
+        e.preventDefault();
+        var files = $('#picURLInput')[0].files;
+        var formData = new FormData();
+        formData.append('imgFile', files[0]);
+        if(files.length > 0 && isAllowedPic(files[0].type, files[0].size)){
+            var url = "/admin/catering/restaurant/pic";
 
-        if(!isEmail(email)){
-            toastr.warning("邮箱格式不正确");
-            return;
+            var success = function(res){
+                //console.log(res);
+                if(res.errCode == 0){
+                    toastr.success("上传成功");
+                    //$('input[name=pic]').val(res.url);
+                    $('#picURLImg').attr("src", res.url);
+                } else{
+                    console.log("########" +res.msg)
+                    toastr.error(res.msg);
+                }
+
+            }.bind(this);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,//用来回避jquery对formdata的默认序列化，XMLHttpRequest会对其进行正确处理
+                contentType: false,//设为false才会获得正确的conten-Type
+                async: true,
+                success: success,
+                error: function(xhr,status,err){
+                    //console.log(xhr,status,err.toString());
+                    toastr.error(err);
+                }
+
+            });
+        }
+        else{
+            toastr.warning("请选择大小在1M以内的图片文件!!");
+        }
+    }
+    submit(evt){
+        evt.preventDefault();
+        //var formData = new FormData($("#newDishForm")[0]);
+        var formData = getFormJson($('#newDishForm')[0]);
+        var pic = $('#picURLImg').attr("src");
+        //if(pic != ""){
+        formData.pic = pic;
+        //}
+
+        if(formData.name == "" || formData.description == "" || formData.tel == "" || formData.pic == "" || formData.address == "" || formData.basePrice == ""
+            || formData.packFee == "" || formData.duringTime == ""){
+            toastr.warning("必填项有空");
+            return false;
         }
 
-        if(password != secondPwd){
-            toastr.warning("两次密码输入不一致");
-            return;
-        }else if(!isStrongPassword(password)){
-            toastr.warning("密码格式不正确");
-            return;
-        }
-        var postData = {email: email, password: password};
-        console.log("$$$$ " + JSON.stringify(postData))
-        this.props.dispatch(addRestaurantUsers(postData,this))
+        formData.ownId = parseInt(this.props.location.query.id);
+        formData.basePrice = parseFloat(formData.basePrice);
+        formData.packFee = parseFloat(formData.packFee);
+        formData.duringTime = parseInt(formData.duringTime);
+        formData.category = parseInt(formData.category);
+        formData.openingTime = "";
+        console.log("####formdata" +JSON.stringify(formData))
+        this.props.dispatch(addRestaurant(formData))
     }
-    checkEmail(){
-        var email = $('#email').val();
-        if(!isEmail(email)){
-            toastr.warning("邮箱格式不正确");
-        }
-    }
-    onCheckPwd(){
-        var pwd = $('#password').val();
-        if(!isStrongPassword(pwd)){
-            toastr.warning("密码格式不正确");
-        }
-    }
+
     render(){
-        const {storeUserList} = this.props;
+        const {storeUserList,resTags} = this.props;
         return(
             <div id="RestaurantAdd">
                 <div className="container">
@@ -76,11 +103,11 @@ export default class AddRestaurant extends Component{
                                         <label for="category">所属类别(必填)</label>
                                         <select className="form-control" id="category" name="category">
                                             {
-                                            //    this.state.RestaurantTagsStore.tagList.map(function(e){
-                                            //    return(
-                                            //        <option value={e.tagId}>{e.tagName}</option>
-                                            //    )
-                                            //}.bind(this))
+                                                resTags.map(function(e){
+                                                return(
+                                                    <option value={e.id}>{e.tagName}</option>
+                                                )
+                                            }.bind(this))
                                             }
                                         </select>
                                         <p className="help-block">餐厅主营归类</p>
@@ -95,7 +122,7 @@ export default class AddRestaurant extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label for="dishPic">Logo图片(必填,{"<"}1M)</label>
-                                        <input type="file" id="picURLInput" />
+                                        <input type="file" id="picURLInput"  onChange={this.handlePicFileChange}/>
                                         <img id="picURLImg" src="" alt="" width="100" height="100"/>
                                         <p className="help-block">此图将作为餐厅的Logo, 最佳尺寸:宽高比1:1, 推荐100px*100px</p>
                                     </div>
@@ -144,7 +171,7 @@ export default class AddRestaurant extends Component{
                                     </div>
 
                                     <button type="submit" className="btn btn-success btn-block"
-                                            >提交</button>
+                                           onClick={this.submit} >提交</button>
                                 </fieldset>
                             </form>
                         </div>
@@ -159,12 +186,14 @@ export default class AddRestaurant extends Component{
 AddRestaurant.contextTypes = contextTypes;
 AddRestaurant.propTypes = {
     storeUserList:PropTypes.array.isRequired,
+    resTags:PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired
 };
 
 function getRestaurantList(state){
     return{
-        storeUserList: state.manageStorers.storeUserList?state.manageStorers.storeUserList:[]
+        storeUserList: state.manageStorers.storeUserList?state.manageStorers.storeUserList:[],
+        resTags: state.manageStorers.resTags?state.manageStorers.resTags:[]
     }
 }
 export default connect(getRestaurantList)(AddRestaurant)

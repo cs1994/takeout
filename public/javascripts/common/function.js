@@ -45,3 +45,28 @@ export const timeFormat = (timeNum)=>{
 
     return format(timeNum, 'yyyy-MM-dd HH:mm:ss');
 };
+
+export const isAllowedPic=(type, size)=>{
+    var picTypes = { "image/jpeg": "", "image/jpg" : "", "image/png": "", "image/bmp": "", "image/gif": ""};
+    return type.toLowerCase() in picTypes && size < 1024 * 1024; //pic size limited 1M
+}
+
+export function getFormJson(form) {
+    var o = {};
+    var a = $(form).serializeArray();
+    //console.log(a);
+    $.each(a, function () {
+        if (o[this.name] !== undefined) {
+            //console.log("无");
+            //console.log(typeof(o[this.name]));
+
+            if (!$.isArray(o[this.name])) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+}

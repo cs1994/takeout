@@ -18,9 +18,15 @@ GET         /admin/manager/u/resetPassword       @controllers.admin.Manage.reset
 POST        /admin/manager/classify/add          @controllers.admin.Manage.addFoodClassify
 GET         /admin/manager/classify/list         @controllers.admin.Manage.getAllFoodClassify
 POST        /admin/manager/classify/update       @controllers.admin.Manage.updateFoodClassify(id:Long)
-GET        /admin/manager/classify/delete       @controllers.admin.Manage.deleteFoodClassify(id:Long)
+GET         /admin/manager/classify/delete       @controllers.admin.Manage.deleteFoodClassify(id:Long)
 
 
+#picture
+POST        /admin/catering/restaurant/pic       @controllers.PictureManager.uploadRestaurantPic
+
+#restaurant
+POST        /admin/catering/restaurant/add       @controllers.admin.Manage.createRestaurant
+GET         /admin/catering/restaurant/list      @controllers.admin.Manage.listRestaurant(page:Int,tag:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                                               controllers.WebJarAssets.at(file)

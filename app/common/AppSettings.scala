@@ -25,10 +25,10 @@ class AppSettings @Inject()(
 //  val POP_SERVER =  mailConf.getString("POP_SERVER").getOrElse("popcom.263xmail.com")
 //  val POP_PORT =  mailConf.getString("POP_PORT").getOrElse("110")
 //
-//  //image
-//  private val imageConfig = allConfig.getConfig("image").get
-//  val imageSavePrefix = imageConfig.getString("savePrefix").getOrElse("/data/worldmall")
-//  val imageAccessPrefix = imageConfig.getString("accessPrefix").getOrElse("/pic")
+  //image
+  private val imageConfig = allConfig.getConfig("image").get
+  val imageSavePrefix = imageConfig.getString("savePrefix").getOrElse("/data/worldmall")
+  val imageAccessPrefix = imageConfig.getString("accessPrefix").getOrElse("/pic")
 //
 //  //deploy
 //  private val deployConfig = allConfig.getConfig("deploy.conf").get

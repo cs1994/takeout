@@ -28,7 +28,7 @@ export default class ShanghuHeader extends Component {
                                 <a className="nav-link" href="#">用户</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#">餐厅</a>
+                                <a className="nav-link" href="/takeout/admin#/restaurant/list">餐厅</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="/takeout/admin#/classify">分类</a>

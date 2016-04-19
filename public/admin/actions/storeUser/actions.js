@@ -10,13 +10,11 @@ export const GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
 export const ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
 export const UPDATE_RESTAURANT_TAG = 'UPDATE_RESTAURANT_TAG';
 export const DELETE_RESTAURANT_TAG = 'DELETE_RESTAURANT_TAG';
+export const GET_RESTAURANT_LIST = 'GET_RESTAURANT_LIST';
 
 
 function fetchStoreAdminList(list) {
-    return {
-        type: GET_STORE_ADMIN,
-        list:list
-    }
+    return {type: GET_STORE_ADMIN, list:list}
 }
 function addStoreAdmin(data,id,time){
     return{type: ADD_STORE_ADMIN,data:data,id:id,time:time}
@@ -28,10 +26,7 @@ function deleteStoreAdmin(index){
     return{type:DELETE_STORE_ADMIN,index:index}
 }
 function fetchClassifyList(list) {
-    return {
-        type: GET_RESTAURANT_TAG,
-        list:list
-    }
+    return {type: GET_RESTAURANT_TAG, list:list}
 }
 function addRestaurantTag(data,id){
     return{type:ADD_RESTAURANT_TAG,data:data,id:id}
@@ -41,6 +36,9 @@ function updateResTag(data,index){
 }
 function deleteResTag(index){
     return{type:DELETE_RESTAURANT_TAG,index:index}
+}
+function fetchResList(list){
+    return{type:GET_RESTAURANT_LIST,list:list}
 }
 
 export function fetchStoreAdminLists(page) {
@@ -195,6 +193,43 @@ export const deleteFoodClassify=(id,index)=>{
     }
 }
 
+export const addRestaurant = (data)=>{
+    return dispatch=>{
+        return fetch('/admin/catering/restaurant/add', {
+            credentials:'include',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method:'POST',
+            body:JSON.stringify(data)
+        })
+            .then( function(response){
+                return response.json();
+            }).then(function(json){
+                //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+                if(json.errCode ==0){
+                    location.href="/takeout/admin"
+                }
+            }).catch(e => console.log('error = ' + e));
+    }
+}
+
+export const getRestaurantLists=(page,tag)=>{
+    return dispatch => {
+        return fetch('/admin/catering/restaurant/list?page='+page+"&tag="+tag,{
+            credentials:'include'})
+            .then( function(response){
+                return response.json();
+            }).then(function(json){
+                //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+                if(json.errCode ==0){
+                    console.log("################### " +JSON.stringify(json.list))
+                    dispatch(fetchResList(json.list));
+                }
+            }).catch(e => console.log('error = ' + e));
+    }
+}
 
 
 

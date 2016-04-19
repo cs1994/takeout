@@ -12,6 +12,7 @@ import App from './containers/App.js'
 import manageStore from './store/store.js'
 import StoreUserList from './components/StoreUserList.js'
 import AddRestaurant from './components/AddRestaurant.js'
+import RestaurantList from './components/RestaurantList.js'
 import ClassifyShow from './components/ClassifyShow.js'
 
 const store = manageStore();
@@ -23,6 +24,7 @@ render(
             <Route path="/" component={App}>
                 <IndexRoute component={StoreUserList}/>
                 <Route path="/restaurant/add" component={AddRestaurant}/>
+                <Route path="/restaurant/list" component={RestaurantList}/>
                 <Route path="/classify" component={ClassifyShow}/>
             </Route>
         </Router>

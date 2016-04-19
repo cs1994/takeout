@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9a6c39969b30be8655d3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2ee909356a39eeefe20a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -604,15 +604,21 @@
 
 	var _AddRestaurant2 = _interopRequireDefault(_AddRestaurant);
 
-	var _ClassifyShow = __webpack_require__(327);
+	var _RestaurantList = __webpack_require__(327);
+
+	var _RestaurantList2 = _interopRequireDefault(_RestaurantList);
+
+	var _ClassifyShow = __webpack_require__(328);
 
 	var _ClassifyShow2 = _interopRequireDefault(_ClassifyShow);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var store = (0, _store2.default)(); /**
-	                                     * Created by caoshuai on 2016/4/10.
-	                                     */
+	/**
+	 * Created by caoshuai on 2016/4/10.
+	 */
+
+	var store = (0, _store2.default)();
 
 	var rootElement = document.getElementById('App');
 	(0, _reactDom.render)(_react2.default.createElement(
@@ -626,6 +632,7 @@
 	            { path: '/', component: _App2.default },
 	            _react2.default.createElement(_reactRouter.IndexRoute, { component: _StoreUserList2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: '/restaurant/add', component: _AddRestaurant2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: '/restaurant/list', component: _RestaurantList2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: '/classify', component: _ClassifyShow2.default })
 	        )
 	    )
@@ -12242,7 +12249,7 @@
 	                                { className: 'nav-item' },
 	                                _react2.default.createElement(
 	                                    'a',
-	                                    { className: 'nav-link', href: '#' },
+	                                    { className: 'nav-link', href: '/takeout/admin#/restaurant/list' },
 	                                    '餐厅'
 	                                )
 	                            ),
@@ -12656,29 +12663,10 @@
 	            return Object.assign({}, state, {
 	                resTags: [].concat(_toConsumableArray(state.resTags.slice(0, action.index)), _toConsumableArray(state.resTags.slice(action.index + 1)))
 	            });
-	        //case GET_RESTAURANT_TAG_DETAIL:
-	        //    return Object.assign({}, state, {
-	        //        classifyDetail:state.resTags[index]
-	        //    });
-	        //case DELETE_SLIDER:
-	        //    return Object.assign({}, state, {
-	        //        sliderList:action.lists
-	        //    });
-	        //case CHANGE_SLIDER_ORDER:
-	        //    return Object.assign({}, state, {
-	        //        sliderList:[
-	        //            ...state.sliderList.slice(0, action.index-1),
-	        //            Object.assign({},state.sliderList[action.index],{order:state.sliderList[action.index-1].order}),
-	        //            Object.assign({},state.sliderList[action.index-1],{order:state.sliderList[action.index].order}),
-	        //            //state.sliderList[action.index],
-	        //            //state.sliderList[action.index-1],
-	        //            ...state.sliderList.slice(action.index + 1)
-	        //        ]
-	        //    });
-	        //case GET_SLIDER_DETAIL:
-	        //    return Object.assign({},state,{
-	        //        sliderDetail:action.detail
-	        //    })
+	        case _actions.GET_RESTAURANT_LIST:
+	            Object.assign({}, state, {
+	                resList: action.list
+	            });
 	        default:
 	            return state;
 	    }
@@ -12711,12 +12699,10 @@
 	var ADD_RESTAURANT_TAG = exports.ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
 	var UPDATE_RESTAURANT_TAG = exports.UPDATE_RESTAURANT_TAG = 'UPDATE_RESTAURANT_TAG';
 	var DELETE_RESTAURANT_TAG = exports.DELETE_RESTAURANT_TAG = 'DELETE_RESTAURANT_TAG';
+	var GET_RESTAURANT_LIST = exports.GET_RESTAURANT_LIST = 'GET_RESTAURANT_LIST';
 
 	function fetchStoreAdminList(list) {
-	    return {
-	        type: GET_STORE_ADMIN,
-	        list: list
-	    };
+	    return { type: GET_STORE_ADMIN, list: list };
 	}
 	function addStoreAdmin(data, id, time) {
 	    return { type: ADD_STORE_ADMIN, data: data, id: id, time: time };
@@ -12728,10 +12714,7 @@
 	    return { type: DELETE_STORE_ADMIN, index: index };
 	}
 	function fetchClassifyList(list) {
-	    return {
-	        type: GET_RESTAURANT_TAG,
-	        list: list
-	    };
+	    return { type: GET_RESTAURANT_TAG, list: list };
 	}
 	function addRestaurantTag(data, id) {
 	    return { type: ADD_RESTAURANT_TAG, data: data, id: id };
@@ -12741,6 +12724,9 @@
 	}
 	function deleteResTag(index) {
 	    return { type: DELETE_RESTAURANT_TAG, index: index };
+	}
+	function fetchResList(list) {
+	    return { type: GET_RESTAURANT_LIST, list: list };
 	}
 
 	function fetchStoreAdminLists(page) {
@@ -12897,6 +12883,46 @@
 	        }).then(function (json) {
 	            if (json.errCode == 0) {
 	                dispatch(deleteResTag(index));
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
+
+	var addRestaurant = exports.addRestaurant = function addRestaurant(data) {
+	    return function (dispatch) {
+	        return fetch('/admin/catering/restaurant/add', {
+	            credentials: 'include',
+	            headers: {
+	                'Accept': 'application/json',
+	                'Content-Type': 'application/json'
+	            },
+	            method: 'POST',
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	            if (json.errCode == 0) {
+	                location.href = "/takeout/admin";
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
+
+	var getRestaurantLists = exports.getRestaurantLists = function getRestaurantLists(page, tag) {
+	    return function (dispatch) {
+	        return fetch('/admin/catering/restaurant/list?page=' + page + "&tag=" + tag, {
+	            credentials: 'include' }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	            if (json.errCode == 0) {
+	                console.log("################### " + JSON.stringify(json.list));
+	                dispatch(fetchResList(json.list));
 	            }
 	        }).catch(function (e) {
 	            return console.log('error = ' + e);
@@ -13062,6 +13088,11 @@
 	            });
 	        }
 	    }, {
+	        key: 'openResPage',
+	        value: function openResPage(id) {
+	            this.context.router.push({ pathname: "/restaurant/add", query: { id: id } });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var storeUserList = this.props.storeUserList;
@@ -13183,7 +13214,7 @@
 	                                                null,
 	                                                _react2.default.createElement(
 	                                                    'button',
-	                                                    { className: 'btn btn-info btn-sm' },
+	                                                    { className: 'btn btn-info btn-sm', onClick: this.openResPage.bind(this, e.id) },
 	                                                    '开餐厅'
 	                                                ),
 	                                                '  ',
@@ -13443,6 +13474,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.getFormJson = getFormJson;
 	/**
 	 * Created by caoshuai on 2016/4/10.
 	 */
@@ -13492,6 +13524,31 @@
 
 	    return format(timeNum, 'yyyy-MM-dd HH:mm:ss');
 	};
+
+	var isAllowedPic = exports.isAllowedPic = function isAllowedPic(type, size) {
+	    var picTypes = { "image/jpeg": "", "image/jpg": "", "image/png": "", "image/bmp": "", "image/gif": "" };
+	    return type.toLowerCase() in picTypes && size < 1024 * 1024; //pic size limited 1M
+	};
+
+	function getFormJson(form) {
+	    var o = {};
+	    var a = $(form).serializeArray();
+	    //console.log(a);
+	    $.each(a, function () {
+	        if (o[this.name] !== undefined) {
+	            //console.log("无");
+	            //console.log(typeof(o[this.name]));
+
+	            if (!$.isArray(o[this.name])) {
+	                o[this.name] = [o[this.name]];
+	            }
+	            o[this.name].push(this.value || '');
+	        } else {
+	            o[this.name] = this.value || '';
+	        }
+	    });
+	    return o;
+	}
 
 /***/ },
 /* 326 */
@@ -13543,66 +13600,86 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AddRestaurant).call(this, props));
 
-	        _this.openModal = _this.openModal.bind(_this);
-	        _this.onConfirm = _this.onConfirm.bind(_this);
-	        _this.checkEmail = _this.checkEmail.bind(_this);
-	        _this.onCheckPwd = _this.onCheckPwd.bind(_this);
+	        _this.submit = _this.submit.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(AddRestaurant, [{
 	        key: 'componentWillMount',
 	        value: function componentWillMount() {
-	            this.props.dispatch((0, _actions.fetchStoreAdminLists)(1));
+	            this.props.dispatch((0, _actions.fetchAllFoodClassify)());
 	        }
 	    }, {
-	        key: 'openModal',
-	        value: function openModal() {
-	            this.refs.addStoreUser.open();
-	        }
-	    }, {
-	        key: 'onConfirm',
-	        value: function onConfirm() {
-	            var email = $('#email').val();
-	            var password = $('#password').val();
-	            var secondPwd = $('#secondPwd').val();
+	        key: 'handlePicFileChange',
+	        value: function handlePicFileChange(e) {
+	            e.preventDefault();
+	            var files = $('#picURLInput')[0].files;
+	            var formData = new FormData();
+	            formData.append('imgFile', files[0]);
+	            if (files.length > 0 && (0, _function.isAllowedPic)(files[0].type, files[0].size)) {
+	                var url = "/admin/catering/restaurant/pic";
 
-	            if (!(0, _function.isEmail)(email)) {
-	                toastr.warning("邮箱格式不正确");
-	                return;
+	                var success = function (res) {
+	                    //console.log(res);
+	                    if (res.errCode == 0) {
+	                        toastr.success("上传成功");
+	                        //$('input[name=pic]').val(res.url);
+	                        $('#picURLImg').attr("src", res.url);
+	                    } else {
+	                        console.log("########" + res.msg);
+	                        toastr.error(res.msg);
+	                    }
+	                }.bind(this);
+
+	                $.ajax({
+	                    url: url,
+	                    type: 'POST',
+	                    data: formData,
+	                    processData: false, //用来回避jquery对formdata的默认序列化，XMLHttpRequest会对其进行正确处理
+	                    contentType: false, //设为false才会获得正确的conten-Type
+	                    async: true,
+	                    success: success,
+	                    error: function error(xhr, status, err) {
+	                        //console.log(xhr,status,err.toString());
+	                        toastr.error(err);
+	                    }
+
+	                });
+	            } else {
+	                toastr.warning("请选择大小在1M以内的图片文件!!");
+	            }
+	        }
+	    }, {
+	        key: 'submit',
+	        value: function submit(evt) {
+	            evt.preventDefault();
+	            //var formData = new FormData($("#newDishForm")[0]);
+	            var formData = (0, _function.getFormJson)($('#newDishForm')[0]);
+	            var pic = $('#picURLImg').attr("src");
+	            //if(pic != ""){
+	            formData.pic = pic;
+	            //}
+
+	            if (formData.name == "" || formData.description == "" || formData.tel == "" || formData.pic == "" || formData.address == "" || formData.basePrice == "" || formData.packFee == "" || formData.duringTime == "") {
+	                toastr.warning("必填项有空");
+	                return false;
 	            }
 
-	            if (password != secondPwd) {
-	                toastr.warning("两次密码输入不一致");
-	                return;
-	            } else if (!(0, _function.isStrongPassword)(password)) {
-	                toastr.warning("密码格式不正确");
-	                return;
-	            }
-	            var postData = { email: email, password: password };
-	            console.log("$$$$ " + JSON.stringify(postData));
-	            this.props.dispatch((0, _actions.addRestaurantUsers)(postData, this));
-	        }
-	    }, {
-	        key: 'checkEmail',
-	        value: function checkEmail() {
-	            var email = $('#email').val();
-	            if (!(0, _function.isEmail)(email)) {
-	                toastr.warning("邮箱格式不正确");
-	            }
-	        }
-	    }, {
-	        key: 'onCheckPwd',
-	        value: function onCheckPwd() {
-	            var pwd = $('#password').val();
-	            if (!(0, _function.isStrongPassword)(pwd)) {
-	                toastr.warning("密码格式不正确");
-	            }
+	            formData.ownId = parseInt(this.props.location.query.id);
+	            formData.basePrice = parseFloat(formData.basePrice);
+	            formData.packFee = parseFloat(formData.packFee);
+	            formData.duringTime = parseInt(formData.duringTime);
+	            formData.category = parseInt(formData.category);
+	            formData.openingTime = "";
+	            console.log("####formdata" + JSON.stringify(formData));
+	            this.props.dispatch((0, _actions.addRestaurant)(formData));
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var storeUserList = this.props.storeUserList;
+	            var _props = this.props;
+	            var storeUserList = _props.storeUserList;
+	            var resTags = _props.resTags;
 
 	            return _react2.default.createElement(
 	                'div',
@@ -13639,7 +13716,17 @@
 	                                            { 'for': 'category' },
 	                                            '所属类别(必填)'
 	                                        ),
-	                                        _react2.default.createElement('select', { className: 'form-control', id: 'category', name: 'category' }),
+	                                        _react2.default.createElement(
+	                                            'select',
+	                                            { className: 'form-control', id: 'category', name: 'category' },
+	                                            resTags.map(function (e) {
+	                                                return _react2.default.createElement(
+	                                                    'option',
+	                                                    { value: e.id },
+	                                                    e.tagName
+	                                                );
+	                                            }.bind(this))
+	                                        ),
 	                                        _react2.default.createElement(
 	                                            'p',
 	                                            { className: 'help-block' },
@@ -13672,7 +13759,7 @@
 	                                            "<",
 	                                            '1M)'
 	                                        ),
-	                                        _react2.default.createElement('input', { type: 'file', id: 'picURLInput' }),
+	                                        _react2.default.createElement('input', { type: 'file', id: 'picURLInput', onChange: this.handlePicFileChange }),
 	                                        _react2.default.createElement('img', { id: 'picURLImg', src: '', alt: '', width: '100', height: '100' }),
 	                                        _react2.default.createElement(
 	                                            'p',
@@ -13762,8 +13849,8 @@
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        'button',
-	                                        { type: 'submit', className: 'btn btn-success btn-block'
-	                                        },
+	                                        { type: 'submit', className: 'btn btn-success btn-block',
+	                                            onClick: this.submit },
 	                                        '提交'
 	                                    )
 	                                )
@@ -13783,12 +13870,14 @@
 	AddRestaurant.contextTypes = contextTypes;
 	AddRestaurant.propTypes = {
 	    storeUserList: _react.PropTypes.array.isRequired,
+	    resTags: _react.PropTypes.array.isRequired,
 	    dispatch: _react.PropTypes.func.isRequired
 	};
 
 	function getRestaurantList(state) {
 	    return {
-	        storeUserList: state.manageStorers.storeUserList ? state.manageStorers.storeUserList : []
+	        storeUserList: state.manageStorers.storeUserList ? state.manageStorers.storeUserList : [],
+	        resTags: state.manageStorers.resTags ? state.manageStorers.resTags : []
 	    };
 	}
 	exports.default = (0, _reactRedux.connect)(getRestaurantList)(AddRestaurant);
@@ -13826,11 +13915,385 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by caoshuai on 2016/4/19.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	/**
+	 * 餐厅列表
+	 * */
+	var contextTypes = {
+	    router: _react2.default.PropTypes.object
+	};
+
+	var RestaurantList = function (_Component) {
+	    _inherits(RestaurantList, _Component);
+
+	    function RestaurantList(props) {
+	        _classCallCheck(this, RestaurantList);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(RestaurantList).call(this, props));
+	    }
+
+	    _createClass(RestaurantList, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.props.dispatch((0, _actions.fetchAllFoodClassify)());
+	            this.props.dispatch((0, _actions.getRestaurantLists)(1, 0));
+	        }
+	    }, {
+	        key: 'deleteStoreUser',
+	        value: function deleteStoreUser(id, index) {
+	            var self = this;
+	            swal({
+	                title: "确定要删除吗?",
+	                text: "",
+	                type: "warning",
+	                showCancelButton: true,
+	                confirmButtonColor: "#DD6B55",
+	                confirmButtonText: "确认",
+	                cancelButtonText: "取消"
+	            }, function () {
+	                self.props.dispatch(deleteResUser(id, index));
+	            });
+	        }
+	    }, {
+	        key: 'handleResetPwd',
+	        value: function handleResetPwd(id) {
+	            var self = this;
+	            swal({
+	                title: "重置该商户的登录密码?",
+	                text: "提醒: 修改商户密码应与商户达成一致意见,请谨慎操作",
+	                type: "warning",
+	                showCancelButton: true,
+	                confirmButtonColor: "#DD6B55",
+	                confirmButtonText: "重置",
+	                cancelButtonText: "取消"
+	            }, function () {
+	                self.props.dispatch(resetResUserPWD(id));
+	            });
+	        }
+	    }, {
+	        key: 'openResPage',
+	        value: function openResPage(id) {
+	            this.context.router.push({ pathname: "/restaurant/add", query: { id: id } });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props;
+	            var resList = _props.resList;
+	            var resTags = _props.resTags;
+
+	            console.log("@@@@@@@@@@@@@@@ " + JSON.stringify(resList));
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'RestaurantManager' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'container' },
+	                    _react2.default.createElement('br', null),
+	                    _react2.default.createElement('br', null),
+	                    _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        _react2.default.createElement(
+	                            'label',
+	                            { htmlFor: '' },
+	                            '筛选:'
+	                        ),
+	                        '  ',
+	                        _react2.default.createElement(
+	                            'select',
+	                            { className: 'form-control', name: 'second_cat_name', id: 'second_cat_name', onChange: this.handleClickSecondCat, style: { display: 'inline', maxWidth: '10em' } },
+	                            _react2.default.createElement('option', { value: '', 'data-toggle': 'tooltip', 'data-placement': 'top', title: '' }),
+	                            _react2.default.createElement(
+	                                'option',
+	                                { value: 0, 'data-toggle': 'tooltip', 'data-placement': 'top', title: '' },
+	                                '全部'
+	                            ),
+	                            resTags.map(function (s) {
+	                                return _react2.default.createElement(
+	                                    'option',
+	                                    { value: s.id, 'data-toggle': 'tooltip', 'data-placement': 'top', title: s.id },
+	                                    s.tagName
+	                                );
+	                            })
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'row' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-sm-12' },
+	                            _react2.default.createElement(
+	                                'table',
+	                                { className: 'table table-striped table-condensed' },
+	                                _react2.default.createElement(
+	                                    'thead',
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        'tr',
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            'ID'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            'index'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            'Logo'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '名称'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '所属类别'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '所属商户ID'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '状态'
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'th',
+	                                            null,
+	                                            '操作'
+	                                        )
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'tbody',
+	                                    null,
+	                                    resList.map(function (e, index) {
+	                                        var stateBtnDom = null;
+	                                        if (e.authState == 0) {
+	                                            stateBtnDom = _react2.default.createElement(
+	                                                'button',
+	                                                { className: 'btn btn-success btn-sm' },
+	                                                '启用'
+	                                            );
+	                                        } else if (e.authState == 1) {
+	                                            stateBtnDom = _react2.default.createElement(
+	                                                'button',
+	                                                { className: 'btn btn-warning btn-sm' },
+	                                                '禁用'
+	                                            );
+	                                        }
+
+	                                        //var tagName = this.getTagNameByTagId(e.tagId);
+	                                        return _react2.default.createElement(
+	                                            'tr',
+	                                            { key: e.id },
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.id
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.index
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement('img', { src: e.pic, width: '50', height: '50', alt: '' })
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.name
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.classifyName
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.ownerId
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                e.authState == 1 ? "已启用" : "已禁用"
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'td',
+	                                                null,
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-primary btn-sm' },
+	                                                    '排序'
+	                                                ),
+	                                                '  ',
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-danger btn-sm' },
+	                                                    '删除'
+	                                                ),
+	                                                '  ',
+	                                                stateBtnDom
+	                                            )
+	                                        );
+	                                    }.bind(this))
+	                                )
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'modal fade', id: 'sortModal' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-dialog' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'modal-content' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'modal-header' },
+	                                _react2.default.createElement(
+	                                    'button',
+	                                    { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+	                                    _react2.default.createElement(
+	                                        'span',
+	                                        { 'aria-hidden': 'true' },
+	                                        '×'
+	                                    )
+	                                ),
+	                                _react2.default.createElement(
+	                                    'h4',
+	                                    { className: 'modal-title' },
+	                                    '修改排序'
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'modal-body' },
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'form-group' },
+	                                    _react2.default.createElement(
+	                                        'label',
+	                                        { 'for': 'description' },
+	                                        '新序号'
+	                                    ),
+	                                    _react2.default.createElement('input', { type: 'number', className: 'form-control', id: 'sortIndex',
+	                                        name: 'sortIndex', maxLength: '10', placeholder: '' }),
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        { className: 'help-block' },
+	                                        '序号越小,排序越靠前'
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'modal-footer' },
+	                                _react2.default.createElement(
+	                                    'button',
+	                                    { type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+	                                    '取消'
+	                                ),
+	                                _react2.default.createElement(
+	                                    'button',
+	                                    { type: 'button', className: 'btn btn-primary', onClick: this.changeSortIndex },
+	                                    '提交'
+	                                )
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-sm-6 col-sm-offset-3' },
+	                        _react2.default.createElement('div', { id: 'pagination' })
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return RestaurantList;
+	}(_react.Component);
+
+	exports.default = RestaurantList;
+
+	RestaurantList.contextTypes = contextTypes;
+	RestaurantList.propTypes = {
+	    resList: _react.PropTypes.array.isRequired,
+	    resTags: _react.PropTypes.array.isRequired,
+	    dispatch: _react.PropTypes.func.isRequired
+	};
+
+	function getRestaurantList(state) {
+	    return {
+	        resList: state.manageStorers.resList ? state.manageStorers.resList : [],
+	        resTags: state.manageStorers.resTags ? state.manageStorers.resTags : []
+	    };
+	}
+	exports.default = (0, _reactRedux.connect)(getRestaurantList)(RestaurantList);
+
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _reactRedux = __webpack_require__(305);
+
+	var _react = __webpack_require__(293);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _modal = __webpack_require__(324);
+
+	var _modal2 = _interopRequireDefault(_modal);
+
+	var _function = __webpack_require__(325);
+
+	var _actions = __webpack_require__(322);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by caoshuai on 2016/4/18.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
 	/**
-	 * 餐厅主人列表
+	 * 餐厅分类列表
 	 * */
 	var contextTypes = {
 	    router: _react2.default.PropTypes.object

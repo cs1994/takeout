@@ -104,7 +104,9 @@ export default class RestaurantList extends Component{
         }, function () {
             self.props.dispatch(resetResUserPWD(id))
         });
-
+    }
+    openResPage(id){
+        this.context.router.push({pathname:"/restaurant/add",query:{id:id}})
     }
     render(){
         const {storeUserList} = this.props;
@@ -148,7 +150,7 @@ export default class RestaurantList extends Component{
                                             <td>{e.state == 1 ? "已启用" : "已禁用"}</td>
                                             <td>{timeFormat(e.createTime)}</td>
                                             <td>
-                                                <button className="btn btn-info btn-sm" >开餐厅</button>&nbsp;&nbsp;
+                                                <button className="btn btn-info btn-sm" onClick={this.openResPage.bind(this,e.id)}>开餐厅</button>&nbsp;&nbsp;
                                                 <button className="btn btn-danger btn-sm" onClick={this.deleteStoreUser.bind(this,e.id,index)}>删除</button>&nbsp;&nbsp;
                                                 <button className="btn btn-warning btn-sm" onClick={this.handleResetPwd.bind(this,e.id)}>重置密码</button>&nbsp;&nbsp;
                                                 {stateBtnDom}

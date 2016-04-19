@@ -7,7 +7,7 @@ import common.errCode.{AdminErrcode,CustomerErrorCode}
 import common.{Constants, UserConstants}
 import controllers.ActionUtils
 import models.protocols.AdminProtocols
-import models.dao.AdminDao
+import models.dao.{AdminDao,RestaurantDao}
 //import models.dao.sys.{CustomerDao, AdminDao, StoreShowDao}
 import org.slf4j.LoggerFactory
 import play.api.cache.CacheApi
@@ -26,6 +26,7 @@ import scala.concurrent.Future
 @Singleton
 class Manage  @Inject()(
                           adminDao: AdminDao,
+                          restaurantDao:RestaurantDao,
                           val actionUtils: ActionUtils,
                           cache: CacheApi
                           ) extends Controller with  AdminProtocols{
@@ -169,6 +170,44 @@ class Manage  @Inject()(
         Ok(AdminErrcode.deleteResTagFail)
     }
 
+  }
+
+  //admin catering store manager
+  def createRestaurant = adminAuth.async{implicit request=>
+
+    val jsonData = request.body.asJson.get
+    val name = (jsonData \ "name").as[String] //店名
+  val description = (jsonData \ "description").asOpt[String] //描述
+  val announcer = (jsonData \ "announcer").asOpt[String] //公告
+  val basePrice = (jsonData \ "basePrice").as[Int] //起送价
+  val packFee = (jsonData \ "packFee").as[Int] //送餐费
+  val picURL = (jsonData \ "pic").asOpt[String]  //logo图片url
+  val duringTime = (jsonData \ "duringTime").asOpt[Long] //送餐时间
+  val category = (jsonData \ "category").as[Int] //店铺类别
+  val address = (jsonData \ "address").as[String] //地址
+  val concessions = (jsonData \ "concessions").asOpt[String] //优惠活动
+  val longitude = (jsonData \ "longitude").asOpt[Double] //经度
+  val latitude = (jsonData \ "latitude").asOpt[Double] //纬度
+  val openingTime = (jsonData \ "openingTime").as[String] //营业时间
+  val ownId = (jsonData \ "ownId").as[Long]                        //店家id
+  val tel=(jsonData \ "tel").asOpt[String].getOrElse("")
+
+    restaurantDao.createRestaurant(ownId,name,description, announcer,basePrice,packFee,picURL,duringTime,category,
+      address, concessions,longitude,latitude,openingTime,tel).map{res=>
+      if(res>0){
+        Ok(success)
+      }else{
+        Ok(success)
+      }
+    }
+  }
+
+  def listRestaurant(page:Int=1,tag:Long = -1L) = adminAuth.async{
+    val newPage = if(page<1) 1 else page
+    restaurantDao.listRestaurantByPage(newPage,tag).map{
+      case(totalPage,restaurants)=>
+        Ok(successResult(Json.obj("total"->totalPage,"cur"->newPage,"list"->restaurants.map(rRestaurantWriter.writes))))
+    }
   }
 
 

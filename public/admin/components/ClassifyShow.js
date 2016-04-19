@@ -8,7 +8,7 @@ import Modal from '../../javascripts/common/modal.js'
 import {isEmail,isStrongPassword,timeFormat} from "../../javascripts/common/function.js"
 import {addFoodClassify,fetchAllFoodClassify,getClassifyDetails,updateFoodClassify,deleteFoodClassify} from "../actions/storeUser/actions.js"
 /**
- * 餐厅主人列表
+ * 餐厅分类列表
  * */
 const contextTypes =  {
     router: React.PropTypes.object

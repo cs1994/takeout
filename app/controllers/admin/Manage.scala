@@ -108,5 +108,34 @@ class Manage  @Inject()(
 
     }
   }
+  def updateFoodClassify(id:Long) = adminAuth.async{implicit  request =>
+    val postData=request.body.asJson.get
+    val nameCh=(postData \ "nameCh").as[String]
+    val nameEn=(postData \ "nameEn").as[String]
+    val index=(postData \ "index").as[Int]
+    adminDao.findResTagById(id).flatMap{classifyOpt =>
+      if(classifyOpt.isDefined){
+        adminDao.updateResTag(id,nameCh,nameEn,index).map{result=>
+          if(result>0)
+            Ok(success)
+          else Ok(AdminErrcode.updateClassifyFail)
+        }
+      }
+      else {
+        Future.successful(Ok(AdminErrcode.resTagNotExits))
+      }
+    }
+  }
+
+  def deleteFoodClassify(id:Long)= adminAuth.async{implicit request=>
+    adminDao.deleteResTag(id).map{num=>
+      if(num>0)
+        Ok(success)
+      else
+        Ok(AdminErrcode.deleteResTagFail)
+    }
+
+  }
+
 
 }

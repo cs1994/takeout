@@ -14,6 +14,8 @@ GET         /admin/manager/u/list                @controllers.admin.Manage.listS
 
 POST        /admin/manager/classify/add          @controllers.admin.Manage.addFoodClassify
 GET         /admin/manager/classify/list         @controllers.admin.Manage.getAllFoodClassify
+POST        /admin/manager/classify/update       @controllers.admin.Manage.updateFoodClassify(id:Long)
+GET        /admin/manager/classify/delete       @controllers.admin.Manage.deleteFoodClassify(id:Long)
 
 
 

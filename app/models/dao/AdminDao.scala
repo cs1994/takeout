@@ -3,6 +3,7 @@ package models.dao
 import javax.inject.Inject
 
 import com.google.inject.Singleton
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.TagName
 import common.UserConstants
 import models.tables.SlickTables
 import models.tables.SlickTables._
@@ -90,5 +91,16 @@ class AdminDao @Inject()(
     db.run(
       restaurantTag.sortBy(_.order).result
     )
+  }
+  def findResTagById(id:Long)={
+    db.run(restaurantTag.filter(_.id === id).result.headOption)
+  }
+  def updateResTag(id:Long,tagName:String,englishName:String,index:Int)={
+    db.run(
+      restaurantTag.filter(_.id===id).map(c =>(c.tagName,c.englishName,c.order)).update(tagName,englishName,index)
+    )
+  }
+  def deleteResTag(id:Long)={
+    db.run(restaurantTag.filter(_.id===id).delete)
   }
 }

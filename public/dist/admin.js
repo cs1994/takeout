@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "73d656296180e1ff611a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "bfcdbe8c807a211af970"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12639,6 +12639,15 @@
 	                resTags: [{ id: action.id, tagName: action.data.nameCh, englishName: action.data.nameEn,
 	                    order: action.data.index }].concat(_toConsumableArray(state.resTags))
 	            });
+	        case _actions.UPDATE_RESTAURANT_TAG:
+	            return Object.assign({}, state, {
+	                resTags: [].concat(_toConsumableArray(state.resTags.slice(0, action.index)), [{ id: state.resTags[action.index].id, tagName: action.data.nameCh, englishName: action.data.nameEn,
+	                    order: action.data.index }], _toConsumableArray(state.resTags.slice(action.index + 1)))
+	            });
+	        case _actions.DELETE_RESTAURANT_TAG:
+	            return Object.assign({}, state, {
+	                resTags: [].concat(_toConsumableArray(state.resTags.slice(0, action.index)), _toConsumableArray(state.resTags.slice(action.index + 1)))
+	            });
 	        //case GET_RESTAURANT_TAG_DETAIL:
 	        //    return Object.assign({}, state, {
 	        //        classifyDetail:state.resTags[index]
@@ -12690,6 +12699,8 @@
 	var ADD_STORE_ADMIN = exports.ADD_STORE_ADMIN = 'ADD_STORE_ADMIN';
 	var GET_RESTAURANT_TAG = exports.GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
 	var ADD_RESTAURANT_TAG = exports.ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
+	var UPDATE_RESTAURANT_TAG = exports.UPDATE_RESTAURANT_TAG = 'UPDATE_RESTAURANT_TAG';
+	var DELETE_RESTAURANT_TAG = exports.DELETE_RESTAURANT_TAG = 'DELETE_RESTAURANT_TAG';
 
 	function fetchStoreAdminList(list) {
 	    return {
@@ -12708,6 +12719,12 @@
 	}
 	function addRestaurantTag(data, id) {
 	    return { type: ADD_RESTAURANT_TAG, data: data, id: id };
+	}
+	function updateResTag(data, index) {
+	    return { type: UPDATE_RESTAURANT_TAG, data: data, index: index };
+	}
+	function deleteResTag(index) {
+	    return { type: DELETE_RESTAURANT_TAG, index: index };
 	}
 
 	function fetchStoreAdminLists(page) {
@@ -12768,7 +12785,7 @@
 	        });
 	    };
 	};
-	var addFoodClassifys = exports.addFoodClassifys = function addFoodClassifys(data, self) {
+	var addFoodClassify = exports.addFoodClassify = function addFoodClassify(data, self) {
 	    return function (dispatch) {
 	        return fetch('/admin/manager/classify/add', {
 	            credentials: 'include',
@@ -12786,6 +12803,44 @@
 	                //console.log("################### " +JSON.stringify(json))
 	                dispatch(addRestaurantTag(data, json.id));
 	                self.refs.addStoreClassify.close();
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
+
+	var updateFoodClassify = exports.updateFoodClassify = function updateFoodClassify(data, id, index, self) {
+	    return function (dispatch) {
+	        return fetch('/admin/manager/classify/update?id=' + id, {
+	            credentials: 'include',
+	            headers: {
+	                'Accept': 'application/json',
+	                'Content-Type': 'application/json'
+	            },
+	            method: 'POST',
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+	            if (json.errCode == 0) {
+	                //console.log("################### " +JSON.stringify(json))
+	                dispatch(updateResTag(data, index));
+	                self.refs.addStoreClassify.close();
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
+	var deleteFoodClassify = exports.deleteFoodClassify = function deleteFoodClassify(id, index) {
+	    return function (dispatch) {
+	        return fetch('/admin/manager/classify/delete?id=' + id, { credentials: 'include' }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            if (json.errCode == 0) {
+	                dispatch(deleteResTag(index));
 	            }
 	        }).catch(function (e) {
 	            return console.log('error = ' + e);
@@ -13682,11 +13737,11 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ClassifyShow).call(this, props));
 
-	        _this.state = { "tag": 1 };
+	        _this.state = { "tag": 1, id: -1, index: -1 };
 	        _this.openModal = _this.openModal.bind(_this);
 	        _this.onConfirm = _this.onConfirm.bind(_this);
-	        _this.getClassifyDetail = _this.getClassifyDetail.bind(_this);
-
+	        _this.changeClassify = _this.changeClassify.bind(_this);
+	        _this.deleteResTag = _this.deleteResTag.bind(_this);
 	        return _this;
 	    }
 
@@ -13698,6 +13753,10 @@
 	    }, {
 	        key: 'openModal',
 	        value: function openModal() {
+	            this.setState({ tag: 1 });
+	            $('#nameCh').val("");
+	            $('#nameEn').val("");
+	            $('#index').val("");
 	            this.refs.addStoreClassify.open();
 	        }
 	    }, {
@@ -13713,15 +13772,26 @@
 	            }
 	            var postData = { nameCh: nameCh, nameEn: nameEn, index: parseInt(index) };
 	            console.log("$$$$ " + JSON.stringify(postData));
-	            this.props.dispatch((0, _actions.addFoodClassifys)(postData, this));
+	            if (this.state.tag == 1) this.props.dispatch((0, _actions.addFoodClassify)(postData, this));else {
+	                this.props.dispatch((0, _actions.updateFoodClassify)(postData, this.state.id, this.state.index, this));
+	            }
 	        }
 	    }, {
-	        key: 'getClassifyDetail',
-	        value: function getClassifyDetail(data, index) {
+	        key: 'changeClassify',
+	        value: function changeClassify(data, index) {
+	            this.setState({ tag: 2, id: data.id, index: index });
 	            $('#nameCh').val(data.tagName);
 	            $('#nameEn').val(data.englishName);
 	            $('#index').val(data.order);
 	            this.refs.addStoreClassify.open();
+	        }
+	    }, {
+	        key: 'deleteResTag',
+	        value: function deleteResTag(id, index) {
+	            var box = confirm("确定删除吗？ ");
+	            if (box) {
+	                this.props.dispatch((0, _actions.deleteFoodClassify)(id, index));
+	            }
 	        }
 	    }, {
 	        key: 'render',
@@ -13821,13 +13891,13 @@
 	                                                null,
 	                                                _react2.default.createElement(
 	                                                    'button',
-	                                                    { className: 'btn btn-info btn-sm', onClick: this.getClassifyDetail.bind(this, e, index) },
+	                                                    { className: 'btn btn-info btn-sm', onClick: this.changeClassify.bind(this, e, index) },
 	                                                    '修改'
 	                                                ),
 	                                                '  ',
 	                                                _react2.default.createElement(
 	                                                    'button',
-	                                                    { className: 'btn btn-danger btn-sm' },
+	                                                    { className: 'btn btn-danger btn-sm', onClick: this.deleteResTag.bind(this, e.id, index) },
 	                                                    '删除'
 	                                                ),
 	                                                '  '
@@ -13850,7 +13920,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    _modal2.default,
-	                    { ref: 'addStoreClassify', title: '添加分类', Id: 'addStoreClassify', onConfirm: this.onConfirm },
+	                    { ref: 'addStoreClassify', title: this.state.tag == 1 ? "添加分类" : "修改分类", Id: 'addStoreClassify', onConfirm: this.onConfirm },
 	                    _react2.default.createElement(
 	                        'form',
 	                        { id: 'newCateForm' },

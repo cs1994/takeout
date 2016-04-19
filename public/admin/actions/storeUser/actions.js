@@ -6,6 +6,8 @@ export const GET_STORE_ADMIN = 'GET_STORE_ADMIN';
 export const ADD_STORE_ADMIN = 'ADD_STORE_ADMIN';
 export const GET_RESTAURANT_TAG = 'GET_RESTAURANT_TAG';
 export const ADD_RESTAURANT_TAG = 'ADD_RESTAURANT_TAG';
+export const UPDATE_RESTAURANT_TAG = 'UPDATE_RESTAURANT_TAG';
+export const DELETE_RESTAURANT_TAG = 'DELETE_RESTAURANT_TAG';
 
 
 function fetchStoreAdminList(list) {
@@ -26,7 +28,12 @@ function fetchClassifyList(list) {
 function addRestaurantTag(data,id){
     return{type:ADD_RESTAURANT_TAG,data:data,id:id}
 }
-
+function updateResTag(data,index){
+    return{type:UPDATE_RESTAURANT_TAG,data:data,index:index}
+}
+function deleteResTag(index){
+    return{type:DELETE_RESTAURANT_TAG,index:index}
+}
 
 export function fetchStoreAdminLists(page) {
     return dispatch => {
@@ -83,7 +90,7 @@ export const fetchAllFoodClassify = ()=>{
             }).catch(e => console.log('error = ' + e));
     }
 }
-export const addFoodClassifys =(data,self)=>{
+export const addFoodClassify =(data,self)=>{
     return dispatch => {
         return fetch('/admin/manager/classify/add', {
             credentials:'include',
@@ -102,6 +109,42 @@ export const addFoodClassifys =(data,self)=>{
                     //console.log("################### " +JSON.stringify(json))
                     dispatch(addRestaurantTag(data,json.id));
                     self.refs.addStoreClassify.close();
+                }
+            }).catch(e => console.log('error = ' + e));
+    }
+}
+
+export const updateFoodClassify =(data,id,index,self)=>{
+    return dispatch=>{
+        return fetch('/admin/manager/classify/update?id='+id, {
+            credentials:'include',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method:'POST',
+            body:JSON.stringify(data)
+        })
+            .then( function(response){
+                return response.json();
+            }).then(function(json){
+                //console.log("!!!!!!!!!!!!!!!!!!!!!!!!"+JSON.stringify(json));
+                if(json.errCode ==0){
+                    //console.log("################### " +JSON.stringify(json))
+                    dispatch(updateResTag(data,index));
+                    self.refs.addStoreClassify.close();
+                }
+            }).catch(e => console.log('error = ' + e));
+    }
+}
+export const deleteFoodClassify=(id,index)=>{
+    return dispatch=>{
+        return fetch('/admin/manager/classify/delete?id='+id,{credentials:'include'})
+            .then( function(response){
+                return response.json();
+            }).then(function(json){
+                if(json.errCode ==0){
+                    dispatch(deleteResTag(index));
                 }
             }).catch(e => console.log('error = ' + e));
     }

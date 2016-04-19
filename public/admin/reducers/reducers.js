@@ -2,7 +2,8 @@
  * Created by caoshuai on 2016/4/10.
  */
 import { combineReducers } from 'redux'
-import { GET_STORE_ADMIN,ADD_STORE_ADMIN,GET_RESTAURANT_TAG,ADD_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
+import { GET_STORE_ADMIN,ADD_STORE_ADMIN,GET_RESTAURANT_TAG,ADD_RESTAURANT_TAG,UPDATE_RESTAURANT_TAG,
+    DELETE_RESTAURANT_TAG} from '../actions/storeUser/actions.js'
 
 function manageStorers(state = {}, action) {
     switch (action.type) {
@@ -23,6 +24,17 @@ function manageStorers(state = {}, action) {
             return Object.assign({}, state, {
                 resTags:[{id:action.id,tagName:action.data.nameCh,englishName:action.data.nameEn,
                     order:action.data.index},...state.resTags]
+            });
+        case UPDATE_RESTAURANT_TAG:
+            return Object.assign({}, state, {
+                resTags:[...state.resTags.slice(0,action.index),
+                    {id:state.resTags[action.index].id,tagName:action.data.nameCh,englishName:action.data.nameEn,
+                    order:action.data.index},...state.resTags.slice(action.index+1)]
+            });
+        case DELETE_RESTAURANT_TAG:
+            return Object.assign({}, state, {
+                resTags:[...state.resTags.slice(0,action.index),
+                   ...state.resTags.slice(action.index+1)]
             });
         //case GET_RESTAURANT_TAG_DETAIL:
         //    return Object.assign({}, state, {

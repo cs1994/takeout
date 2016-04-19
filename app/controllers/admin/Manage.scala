@@ -94,7 +94,21 @@ class Manage  @Inject()(
         Ok(AdminErrcode.deleteStoreAdminFail)
     }
   }
-
+  def resetStoreAdminPassword(id:Long) =adminAuth.async{
+    adminDao.findById(id).flatMap{u=>
+      if(u.isDefined) {
+        adminDao.updateUserPwd(u.get).map{result=>
+          if(result > 0)
+            Ok(success)
+          else
+            Ok(AdminErrcode.resetPwdFail)
+        }
+      }
+      else {
+        Future.successful(Ok(AdminErrcode.userNotExist))
+      }
+    }
+  }
   def addFoodClassify = adminAuth.async{implicit request=>
     val postData=request.body.asJson.get
     val nameCh=(postData \ "nameCh").as[String]

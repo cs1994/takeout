@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6bc6c8fa9440f3afd7bf"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9a6c39969b30be8655d3"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12810,6 +12810,20 @@
 	        });
 	    };
 	};
+	var resetResUserPWD = exports.resetResUserPWD = function resetResUserPWD(id) {
+	    return function (dispatch) {
+	        return fetch('/admin/manager/u/resetPassword?id=' + id, { credentials: 'include' }).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            if (json.errCode == 0) {
+	                console.log(" reset success");
+	                //dispatch(deleteStoreAdmin(index));
+	            }
+	        }).catch(function (e) {
+	            return console.log('error = ' + e);
+	        });
+	    };
+	};
 
 	var fetchAllFoodClassify = exports.fetchAllFoodClassify = function fetchAllFoodClassify() {
 	    return function (dispatch) {
@@ -13032,6 +13046,22 @@
 	            });
 	        }
 	    }, {
+	        key: 'handleResetPwd',
+	        value: function handleResetPwd(id) {
+	            var self = this;
+	            swal({
+	                title: "重置该商户的登录密码?",
+	                text: "提醒: 修改商户密码应与商户达成一致意见,请谨慎操作",
+	                type: "warning",
+	                showCancelButton: true,
+	                confirmButtonColor: "#DD6B55",
+	                confirmButtonText: "重置",
+	                cancelButtonText: "取消"
+	            }, function () {
+	                self.props.dispatch((0, _actions.resetResUserPWD)(id));
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var storeUserList = this.props.storeUserList;
@@ -13165,7 +13195,7 @@
 	                                                '  ',
 	                                                _react2.default.createElement(
 	                                                    'button',
-	                                                    { className: 'btn btn-warning btn-sm' },
+	                                                    { className: 'btn btn-warning btn-sm', onClick: this.handleResetPwd.bind(this, e.id) },
 	                                                    '重置密码'
 	                                                ),
 	                                                '  ',

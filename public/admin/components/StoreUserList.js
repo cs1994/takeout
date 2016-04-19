@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import React, { Component,PropTypes  } from 'react'
 import Modal from '../../javascripts/common/modal.js'
 import {isEmail,isStrongPassword,timeFormat} from "../../javascripts/common/function.js"
-import {addRestaurantUsers,fetchStoreAdminLists,changeResUserState,deleteResUser} from "../actions/storeUser/actions.js"
+import {addRestaurantUsers,fetchStoreAdminLists,changeResUserState,deleteResUser,resetResUserPWD} from "../actions/storeUser/actions.js"
 /**
  * 餐厅主人列表
  * */
@@ -91,6 +91,21 @@ export default class RestaurantList extends Component{
             self.props.dispatch(deleteResUser(id,index))
         });
     }
+    handleResetPwd(id){
+        const self =this;
+        swal({
+            title: "重置该商户的登录密码?",
+            text: "提醒: 修改商户密码应与商户达成一致意见,请谨慎操作",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "重置",
+            cancelButtonText: "取消"
+        }, function () {
+            self.props.dispatch(resetResUserPWD(id))
+        });
+
+    }
     render(){
         const {storeUserList} = this.props;
         console.log("!!!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(storeUserList))
@@ -135,7 +150,7 @@ export default class RestaurantList extends Component{
                                             <td>
                                                 <button className="btn btn-info btn-sm" >开餐厅</button>&nbsp;&nbsp;
                                                 <button className="btn btn-danger btn-sm" onClick={this.deleteStoreUser.bind(this,e.id,index)}>删除</button>&nbsp;&nbsp;
-                                                <button className="btn btn-warning btn-sm" >重置密码</button>&nbsp;&nbsp;
+                                                <button className="btn btn-warning btn-sm" onClick={this.handleResetPwd.bind(this,e.id)}>重置密码</button>&nbsp;&nbsp;
                                                 {stateBtnDom}
                                             </td>
                                         </tr>

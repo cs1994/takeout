@@ -72,6 +72,12 @@ class AdminDao @Inject()(
   def deleteStoreUser(id:Long)={
     db.run(admin.filter(_.id===id).delete)
   }
+  def updateUserPwd(merchant:rAdmin)= {
+    val secure = getSecurePassword(UserConstants.MERCHANT_DEFAULT_PW, merchant.ip, merchant.createTime)
+    db.run{
+      admin.filter(a=>(a.id===merchant.id&&a.id=!=UserConstants.FIRST_ADMIN_ID)).map(_.secure).update(secure)
+    }
+  }
   def createClassify(nameCh:String,nameEn:String,index:Int)={
     db.run(restaurantTag.map(u=>(u.tagName,u.englishName,u.order)).
     returning(restaurantTag.map(_.id))+=(nameCh,nameEn,index))

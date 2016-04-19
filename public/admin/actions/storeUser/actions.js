@@ -106,6 +106,19 @@ export const deleteResUser=(id,index)=>{
             }).catch(e => console.log('error = ' + e));
     }
 }
+export const resetResUserPWD=(id)=>{
+    return dispatch=>{
+        return fetch('/admin/manager/u/resetPassword?id='+id,{credentials:'include'})
+            .then( function(response){
+                return response.json();
+            }).then(function(json){
+                if(json.errCode ==0){
+                    console.log(" reset success")
+                    //dispatch(deleteStoreAdmin(index));
+                }
+            }).catch(e => console.log('error = ' + e));
+    }
+}
 
 export const fetchAllFoodClassify = ()=>{
     return dispatch => {
